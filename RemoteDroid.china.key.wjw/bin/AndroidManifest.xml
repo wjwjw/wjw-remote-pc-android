@@ -20,11 +20,10 @@
         </activity>
         <activity android:name="china.key.gl.GL10Activity" >
         </activity>
-        <activity android:name="china.key.keyboard.KeyboardActivity">            
+        <activity android:name="china.key.keyboard.KeyboardActivity" >
         </activity>
-        <activity android:name="china.key.keyboard.KeyDesignActivity">            
+        <activity android:name="china.key.keyboard.KeyDesignActivity" >
         </activity>
-        
     </application>
 
 </manifest>
