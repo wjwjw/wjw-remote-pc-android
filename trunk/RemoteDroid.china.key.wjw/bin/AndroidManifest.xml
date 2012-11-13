@@ -4,23 +4,27 @@
     android:versionCode="1"
     android:versionName="1.0" >
 
-    <uses-sdk android:minSdkVersion="9" />
+    <uses-sdk android:minSdkVersion="15" />
 
     <application
         android:icon="@drawable/icon"
         android:label="@string/app_name" >
         <activity
-            android:label="@string/app_name"
-            android:name=".MenuActivity" >
-            <intent-filter >
+            android:name=".MenuActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            </activity>
-        <activity android:name=".GL10Activity"> </activity>
-        <activity android:name=".KeyboardActivity"> </activity>
-        <activity android:name=".KeyDesignActivity"> </activity>
-        </application>
+        </activity>
+        <activity android:name="china.key.gl.GL10Activity" >
+        </activity>
+        <activity android:name="china.key.keyboard.KeyboardActivity">            
+        </activity>
+        <activity android:name="china.key.keyboard.KeyDesignActivity">            
+        </activity>
+        
+    </application>
 
 </manifest>

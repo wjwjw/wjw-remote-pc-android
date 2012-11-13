@@ -2,26 +2,28 @@ package china.key.wjw;
 
 import java.util.Vector;
 
+import china.key.keyboard.MyButton;
+
 
 public class GlobalVariables {
 	
 	static int scaleWidth = 0;
 	static int scaleHeight = 0;
-	static float Ayimuth = 0.00f; // 绕y轴旋转的角度
-	static float Aximuth = 0.00f; // 绕x轴旋转的角度
-	static int pos_x = -100000;
+	public static float Ayimuth = 0.00f; // 绕y轴旋转的角度
+	public static float Aximuth = 0.00f; // 绕x轴旋转的角度
+	public static int pos_x = -100000;
 	static int pos_y = -100000; // 记录上一次鼠标的坐标
 	static int dir = 2;
-	static boolean glviewtouchdown = false;
+	public static boolean glviewtouchdown = false;
 	
 	static int MAX_NUM_BUTTON = 100;
-	static int numofbutton = 0;
+	public static int numofbutton = 0;
 	
 	
-	static Vector<Integer> buttonleft = new Vector<Integer>();
-	static Vector<Integer> buttontop = new Vector<Integer>();
-	static Vector<String> buttonname = new Vector<String>();
-	static Vector<MyButton> buttons = new Vector<MyButton>();
+	public static Vector<Integer> buttonleft = new Vector<Integer>();
+	public static Vector<Integer> buttontop = new Vector<Integer>();
+	public static Vector<String> buttonname = new Vector<String>();
+	public static Vector<MyButton> buttons = new Vector<MyButton>();
 
 	
 

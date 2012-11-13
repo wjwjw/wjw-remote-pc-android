@@ -1,5 +1,8 @@
 package china.key.wjw;
 
+import china.key.gl.GL10Activity;
+import china.key.keyboard.KeyDesignActivity;
+import china.key.keyboard.KeyboardActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;

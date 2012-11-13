@@ -45,8 +45,8 @@ public class OSCWorld extends World {
 	//
 	private int scrollMod = -1;
 	//
-	private float xLeftover = 0; //for subpixel mouse accuracy
-	private float yLeftover = 0; //for subpixel mouse accuracy
+	private float xLeftover = 0; // for subpixel mouse accuracy
+	private float yLeftover = 0; // for subpixel mouse accuracy
 	//
 	private DiscoverableThread discoverable;
 
@@ -57,126 +57,110 @@ public class OSCWorld extends World {
 
 	public void onEnter() {
 		try {
+			// Ä£Äâ¼üÅÌ
 			this.robot = new Robot();
 			this.robot.setAutoDelay(5);
-			//
+			// °´¼ü·­Òë
 			this.translator = new KeyTranslator();
-			//
-			InetAddress local = InetAddress.getLocalHost();
-			if (local.isLoopbackAddress()) {
-				this.receiver = new OSCPortIn(OSCPort.defaultSCOSCPort());
-			} else {
-				this.receiver = new OSCPortIn(OSCPort.defaultSCOSCPort());
+			// ½ÓÊÜ¶Ë¶Ë¿Ú
+			this.receiver = new OSCPortIn(OSCPort.defaultSCOSCPort());
+			// ¼àÌýÆ÷
+			{
+				OSCListener listener = new OSCListener() {
+					public void acceptMessage(java.util.Date time,
+							OSCMessage message) {
+						Object[] args = message.getArguments();
+						if (args.length == 3) {
+							mouseEvent(Integer.parseInt(args[0].toString()),
+									Float.parseFloat(args[1].toString()),
+									Float.parseFloat(args[2].toString()));
+						}
+					}
+				};
+				this.receiver.addListener("/mouse", listener);
+				//
+				listener = new OSCListener() {
+					public void acceptMessage(java.util.Date time,
+							OSCMessage message) {
+						Object[] args = message.getArguments();
+						if (args.length == 1) {
+							buttonEvent(Integer.parseInt(args[0].toString()), 0);
+						}
+					}
+				};
+				this.receiver.addListener("/leftbutton", listener);
+				//
+				listener = new OSCListener() {
+					public void acceptMessage(java.util.Date time,
+							OSCMessage message) {
+						Object[] args = message.getArguments();
+						if (args.length == 1) {
+							buttonEvent(Integer.parseInt(args[0].toString()), 2);
+						}
+					}
+				};
+				this.receiver.addListener("/rightbutton", listener);
+				//
+				listener = new OSCListener() {
+					public void acceptMessage(java.util.Date time,
+							OSCMessage message) {
+						Object[] args = message.getArguments();
+						if (args.length == 3) {
+							keyboardEvent(Integer.parseInt(args[0].toString()),
+									Integer.parseInt(args[1].toString()),
+									args[2].toString());
+						}
+						if (args.length == 2) { // handle raw keyboard event, no
+												// translations
+							keyboardEvent(Integer.parseInt(args[0].toString()),
+									Integer.parseInt(args[1].toString()));
+						}
+					}
+				};
+				this.receiver.addListener("/keyboard", listener);
+				//
+				listener = new OSCListener() {
+					public void acceptMessage(java.util.Date time,
+							OSCMessage message) {
+						Object[] args = message.getArguments();
+						if (args.length == 1) {
+							scrollEvent(Integer.parseInt(args[0].toString()));
+						}
+					}
+				};
+				this.receiver.addListener("/wheel", listener);
+				//
+				listener = new OSCListener() {
+					public void acceptMessage(java.util.Date time,
+							OSCMessage message) {
+						Object[] args = message.getArguments();
+					}
+				};
+				this.receiver.addListener("/orient", listener);
+				//
+				this.receiver.startListening();
 			}
-			OSCListener listener = new OSCListener() {
-				public void acceptMessage(java.util.Date time, OSCMessage message) {
-					Object[] args = message.getArguments();
-					if (args.length == 3) {
-						mouseEvent(Integer.parseInt(args[0].toString()), Float.parseFloat(args[1]
-								.toString()), Float.parseFloat(args[2].toString()));
-					}
-				}
-			};
-			this.receiver.addListener("/mouse", listener);
 			//
-			listener = new OSCListener() {
-				public void acceptMessage(java.util.Date time, OSCMessage message) {
-					Object[] args = message.getArguments();
-					if (args.length == 1) {
-						buttonEvent(Integer.parseInt(args[0].toString()), 0);
-					}
-				}
-			};
-			this.receiver.addListener("/leftbutton", listener);
-			//
-			listener = new OSCListener() {
-				public void acceptMessage(java.util.Date time, OSCMessage message) {
-					Object[] args = message.getArguments();
-					if (args.length == 1) {
-						buttonEvent(Integer.parseInt(args[0].toString()), 2);
-					}
-				}
-			};
-			this.receiver.addListener("/rightbutton", listener);
-			//
-			listener = new OSCListener() {
-				public void acceptMessage(java.util.Date time, OSCMessage message) {
-					Object[] args = message.getArguments();
-					if (args.length == 3) {
-						keyboardEvent(Integer.parseInt(args[0].toString()), Integer
-								.parseInt(args[1].toString()), args[2].toString());
-					}
-					if (args.length == 2) { //handle raw keyboard event, no translations
-						keyboardEvent(Integer.parseInt(args[0].toString()), Integer
-								.parseInt(args[1].toString()));
-					}
-				}
-			};
-			this.receiver.addListener("/keyboard", listener);
-			//
-			listener = new OSCListener() {
-				public void acceptMessage(java.util.Date time, OSCMessage message) {
-					Object[] args = message.getArguments();
-					if (args.length == 1) {
-						scrollEvent(Integer.parseInt(args[0].toString()));
-					}
-				}
-			};
-			this.receiver.addListener("/wheel", listener);
-			//
-			listener = new OSCListener() {
-				public void acceptMessage(java.util.Date time, OSCMessage message) {
-					Object[] args = message.getArguments();
-					if (args.length == 6) {
-						orientEvent(Float.parseFloat(args[0].toString()), Float.parseFloat(args[1]
-								.toString()), Float.parseFloat(args[2].toString()), Float
-								.parseFloat(args[3].toString()), Float.parseFloat(args[4]
-								.toString()), Float.parseFloat(args[5].toString()));
-					}
-				}
-			};
-			this.receiver.addListener("/orient", listener);
-			//
-			this.receiver.startListening();
-			// debug
-			GlobalData.oFrame.addKeyListener(new KeyListener() {
-				public void keyReleased(KeyEvent e) {
-					nativeKeyEvent(e);
-				}
-
-				public void keyPressed(KeyEvent e) {
-
-				}
-
-				public void keyTyped(KeyEvent e) {
-
-				}
-			});
-			//
-			this.gDevices = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
+			this.gDevices = GraphicsEnvironment.getLocalGraphicsEnvironment()
+					.getScreenDevices();
 			int l = this.gDevices.length;
 			this.gBounds = new Rectangle[l];
 			for (int i = 0; i < l; ++i) {
-				this.gBounds[i] = this.gDevices[i].getDefaultConfiguration().getBounds();
+				this.gBounds[i] = this.gDevices[i].getDefaultConfiguration()
+						.getBounds();
 			}
-			// GlobalData.oBase.pause();
-			this.initUI();
 			//
 			if (System.getProperty("os.name").compareToIgnoreCase("Mac OS X") == 0) {
 				// hack for robot class bug.
 				this.scrollMod = 1;
 			}
 			// discoverable stuff
-			this.discoverable = new DiscoverableThread(OSCPort.defaultSCOSCPort()+1);
+			this.discoverable = new DiscoverableThread(
+					OSCPort.defaultSCOSCPort() + 1);
 			this.discoverable.start();
 		} catch (Exception ex) {
 
 		}
-	}
-
-	// check keyboard events
-
-	private void nativeKeyEvent(KeyEvent ev) {
 	}
 
 	//
@@ -186,13 +170,13 @@ public class OSCWorld extends World {
 			PointerInfo info = MouseInfo.getPointerInfo();
 			if (info != null) {
 				java.awt.Point p = info.getLocation();
-				//for sub-pixel mouse accuracy, save leftover rounding value
+				// for sub-pixel mouse accuracy, save leftover rounding value
 				float ox = (xOffset * sensitivity) + xLeftover;
-				float oy = (yOffset * sensitivity) + yLeftover;				
+				float oy = (yOffset * sensitivity) + yLeftover;
 				int ix = Math.round(ox);
 				int iy = Math.round(oy);
-				xLeftover = ox-ix;
-				yLeftover = oy-iy;
+				xLeftover = ox - ix;
+				yLeftover = oy - iy;
 				//
 				p.x += ix;
 				p.y += iy;
@@ -203,20 +187,33 @@ public class OSCWorld extends World {
 						break;
 					}
 				}
-				
-				try{
-					this.robot.mouseMove(p.x, p.y);//for systems with quirky bounds checking, allow mouse to move smoothly along to and left edges
-				}catch(Exception e){}
-				
+
+				try {
+					this.robot.mouseMove(p.x, p.y);// for systems with quirky
+													// bounds checking, allow
+													// mouse to move smoothly
+													// along to and left edges
+				} catch (Exception e) {
+				}
+
 			}
 		}
 	}
 
+	/**
+	 * 
+	 * BUTTON1_MASK)Êó±ê×ó¼ü
+	 * BUTTON2_MASK)¹öÖÜ
+	 * BUTTON3_MASK)Êó±êÓÒ¼ü
+	 * Ë«»÷Ö´ÐÐÁ½´Î
+	 * @param type 0:press 1:release
+	 * @param button 0:×ó¼ü 1:ÓÒ¼ü
+	 */
 	private void buttonEvent(int type, int button) {
 		if (button == 0) {
-			button = InputEvent.BUTTON1_MASK;
+			button = InputEvent.BUTTON1_MASK;//16
 		} else if (button == 2) {
-			button = InputEvent.BUTTON3_MASK;
+			button = InputEvent.BUTTON3_MASK;//4
 		}
 		switch (type) {
 		case 0:
@@ -233,10 +230,10 @@ public class OSCWorld extends World {
 	}
 
 	private void scrollEvent(int dir) {
-		this.robot.mouseWheel(-dir * this.scrollMod);
+		this.robot.mouseWheel(-dir * this.scrollMod);//Mac scrollMod Îª¸º
 	}
 
-	//Raw keyboard event, no translation, intercepted when argument count is 2
+	// Raw keyboard event, no translation, intercepted when argument count is 2
 	private void keyboardEvent(int type, int keycode) {
 		switch (type) {
 		case 0:
@@ -257,17 +254,17 @@ public class OSCWorld extends World {
 				this.keyRelease(keycode);
 			}
 			break;
-		}		
+		}
 	}
-	
+
 	private void keyboardEvent(int type, int keycode, String value) {
 		//
 		KeyCodeData data;
-		
+
 		switch (type) {
 		case 0:
 			// key down
-			System.out.println("Key down, code:"+String.valueOf(keycode));
+			System.out.println("Key down, code:" + String.valueOf(keycode));
 			// check if it isn't a mouse click (trackpad "enter" = left button)
 			if (this.translator.isLeftClick(keycode)) {
 				buttonEvent(0, 0);
@@ -294,7 +291,7 @@ public class OSCWorld extends World {
 				if (this.modified) {
 					if (data.modshifted && !this.shifted) {
 						this.keyPress(KeyEvent.VK_SHIFT);
-						//System.out.println("Keycode:"+String.valueOf(keycode)+", local:"+String.valueOf(data.localcode));
+						// System.out.println("Keycode:"+String.valueOf(keycode)+", local:"+String.valueOf(data.localcode));
 					}
 					if (!data.modshifted && this.shifted) {
 						this.keyRelease(KeyEvent.VK_SHIFT);
@@ -317,14 +314,15 @@ public class OSCWorld extends World {
 							this.keyPress(data.localcode);
 						}
 					} catch (IllegalArgumentException e) {
-						System.out.println("Invalid key code: " + data.localcode);
+						System.out.println("Invalid key code: "
+								+ data.localcode);
 					}
 				}
 			}
 			break;
 		case 1:
 			// key up
-			System.out.println("Key up, code:"+String.valueOf(keycode));
+			System.out.println("Key up, code:" + String.valueOf(keycode));
 			// check if it isn't a mouse click (trackpad "enter" = left button)
 			if (this.translator.isLeftClick(keycode)) {
 				buttonEvent(1, 0);
@@ -403,26 +401,6 @@ public class OSCWorld extends World {
 		}
 	}
 
-	private void orientEvent(float z, float x, float y, float rawz, float rawx, float rawy) {
-		StringBuilder builder = new StringBuilder();
-		this.addValue(builder, "z", z);
-		this.addValue(builder, "x", x);
-		this.addValue(builder, "y", y);
-		this.addValue(builder, "rawz", rawz);
-		this.addValue(builder, "rawx", rawx);
-		this.addValue(builder, "rawy", rawy);
-		//
-		double len = Math.sqrt(x * x + y * y + z * z);
-		this.addValue(builder, "len", (float) len);
-		//
-		this.lbDebug.setText(builder.toString());
-	}
-
-	// UI
-
-	private void initUI() {
-
-	}
 
 	private void addValue(StringBuilder builder, String name, float value) {
 		builder.append(name);
