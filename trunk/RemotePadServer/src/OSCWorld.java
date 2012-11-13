@@ -7,10 +7,9 @@ import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.net.InetAddress;
 
 import jsera.util.World;
+import sun.rmi.runtime.Log;
 
 import com.illposed.osc.OSCListener;
 import com.illposed.osc.OSCMessage;
@@ -59,84 +58,130 @@ public class OSCWorld extends World {
 		try {
 			// Ä£Äâ¼üÅÌ
 			this.robot = new Robot();
-			this.robot.setAutoDelay(5);
+			this.robot.setAutoDelay(1);
 			// °´¼ü·­Òë
 			this.translator = new KeyTranslator();
 			// ½ÓÊÜ¶Ë¶Ë¿Ú
 			this.receiver = new OSCPortIn(OSCPort.defaultSCOSCPort());
 			// ¼àÌýÆ÷
 			{
-				OSCListener listener = new OSCListener() {
-					public void acceptMessage(java.util.Date time,
-							OSCMessage message) {
-						Object[] args = message.getArguments();
-						if (args.length == 3) {
-							mouseEvent(Integer.parseInt(args[0].toString()),
-									Float.parseFloat(args[1].toString()),
-									Float.parseFloat(args[2].toString()));
+				OSCListener listener = null;
+				// ¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý
+				{
+					listener = new OSCListener() {
+						public void acceptMessage(java.util.Date time,
+								OSCMessage message) {
+							Object[] args = message.getArguments();
+							// System.out.println(""+args);
+							if (args.length == 3) {
+								mouseEvent(
+										Integer.parseInt(args[0].toString()),
+										Float.parseFloat(args[1].toString()),
+										Float.parseFloat(args[2].toString()));
+							}
 						}
-					}
-				};
-				this.receiver.addListener("/mouse", listener);
-				//
-				listener = new OSCListener() {
-					public void acceptMessage(java.util.Date time,
-							OSCMessage message) {
-						Object[] args = message.getArguments();
-						if (args.length == 1) {
-							buttonEvent(Integer.parseInt(args[0].toString()), 0);
+					};
+					this.receiver.addListener("/mouse", listener);
+				}
+				// ¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü
+
+				// ¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý
+				{
+					listener = new OSCListener() {
+						public void acceptMessage(java.util.Date time,
+								OSCMessage message) {
+							Object[] args = message.getArguments();
+							if (args.length == 1) {
+								buttonEvent(
+										Integer.parseInt(args[0].toString()), 0);
+							}
 						}
-					}
-				};
-				this.receiver.addListener("/leftbutton", listener);
-				//
-				listener = new OSCListener() {
-					public void acceptMessage(java.util.Date time,
-							OSCMessage message) {
-						Object[] args = message.getArguments();
-						if (args.length == 1) {
-							buttonEvent(Integer.parseInt(args[0].toString()), 2);
+					};
+					this.receiver.addListener("/leftbutton", listener);
+				}
+				// ¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü
+
+				// ¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý
+				{
+					listener = new OSCListener() {
+						public void acceptMessage(java.util.Date time,
+								OSCMessage message) {
+							Object[] args = message.getArguments();
+							if (args.length == 1) {
+								buttonEvent(
+										Integer.parseInt(args[0].toString()), 2);
+							}
 						}
-					}
-				};
-				this.receiver.addListener("/rightbutton", listener);
-				//
-				listener = new OSCListener() {
-					public void acceptMessage(java.util.Date time,
-							OSCMessage message) {
-						Object[] args = message.getArguments();
-						if (args.length == 3) {
-							keyboardEvent(Integer.parseInt(args[0].toString()),
-									Integer.parseInt(args[1].toString()),
-									args[2].toString());
+					};
+					this.receiver.addListener("/rightbutton", listener);
+				}
+				// ¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü
+
+				// ¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý
+				{
+					listener = new OSCListener() {
+						public void acceptMessage(java.util.Date time,
+								OSCMessage message) {
+							Object[] args = message.getArguments();
+							// TODO
+							if (args.length == 3) {
+								keyboardEvent(
+										Integer.parseInt(args[0].toString()),
+										Integer.parseInt(args[1].toString()),
+										args[2].toString());
+							} else if (args.length == 2) { // handle raw
+															// keyboard
+															// event, no
+															// translations
+															// System.out.println(args[0].toString()
+															// + " "
+								// + args[1].toString());
+								keyboardEvent(
+										Integer.parseInt(args[0].toString()),
+										Integer.parseInt(args[1].toString()));
+							}
 						}
-						if (args.length == 2) { // handle raw keyboard event, no
-												// translations
-							keyboardEvent(Integer.parseInt(args[0].toString()),
-									Integer.parseInt(args[1].toString()));
+					};
+					this.receiver.addListener("/keyboard", listener);
+				}
+				// ¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü
+
+				// ¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý
+				{
+					listener = new OSCListener() {
+						public void acceptMessage(java.util.Date time,
+								OSCMessage message) {
+							Object[] args = message.getArguments();
+							if (args.length == 2) { // handle raw keyboard
+													// event, no
+													// translations
+								if (Integer.parseInt(args[0].toString()) == 1)
+									OSCWorld.this.keyPress(Integer
+											.parseInt(args[1].toString()));
+								else
+									OSCWorld.this.keyRelease(Integer
+											.parseInt(args[1].toString()));
+							}
 						}
-					}
-				};
-				this.receiver.addListener("/keyboard", listener);
-				//
-				listener = new OSCListener() {
-					public void acceptMessage(java.util.Date time,
-							OSCMessage message) {
-						Object[] args = message.getArguments();
-						if (args.length == 1) {
-							scrollEvent(Integer.parseInt(args[0].toString()));
+					};
+					this.receiver.addListener("/freekeyboard", listener);
+				}
+				// ¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü
+
+				// ¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý
+				{
+					listener = new OSCListener() {
+						public void acceptMessage(java.util.Date time,
+								OSCMessage message) {
+							Object[] args = message.getArguments();
+							if (args.length == 1) {
+								scrollEvent(Integer
+										.parseInt(args[0].toString()));
+							}
 						}
-					}
-				};
-				this.receiver.addListener("/wheel", listener);
-				//
-				listener = new OSCListener() {
-					public void acceptMessage(java.util.Date time,
-							OSCMessage message) {
-						Object[] args = message.getArguments();
-					}
-				};
-				this.receiver.addListener("/orient", listener);
+					};
+					this.receiver.addListener("/wheel", listener);
+				}
 				//
 				this.receiver.startListening();
 			}
@@ -184,6 +229,7 @@ public class OSCWorld extends World {
 				for (int i = 0; i < l; ++i) {
 					if (this.gBounds[i].contains(p)) {
 						this.robot.mouseMove(p.x, p.y);
+						// System.out.println("mouseMove"+p.x+","+p.y);
 						break;
 					}
 				}
@@ -193,6 +239,7 @@ public class OSCWorld extends World {
 													// bounds checking, allow
 													// mouse to move smoothly
 													// along to and left edges
+													// System.out.println("mouseMove"+p.x+","+p.y);
 				} catch (Exception e) {
 				}
 
@@ -202,35 +249,38 @@ public class OSCWorld extends World {
 
 	/**
 	 * 
-	 * BUTTON1_MASK)Êó±ê×ó¼ü
-	 * BUTTON2_MASK)¹öÖÜ
-	 * BUTTON3_MASK)Êó±êÓÒ¼ü
-	 * Ë«»÷Ö´ÐÐÁ½´Î
-	 * @param type 0:press 1:release
-	 * @param button 0:×ó¼ü 1:ÓÒ¼ü
+	 * BUTTON1_MASK)Êó±ê×ó¼ü BUTTON2_MASK) ¹öÂÖ BUTTON3_MASK)Êó±êÓÒ¼ü Ë«»÷Ö´ÐÐÁ½´Î
+	 * 
+	 * @param type
+	 *            0:press 1:release
+	 * @param button
+	 *            0:×ó¼ü 1:ÓÒ¼ü
 	 */
 	private void buttonEvent(int type, int button) {
 		if (button == 0) {
-			button = InputEvent.BUTTON1_MASK;//16
+			button = InputEvent.BUTTON1_MASK;// 16
 		} else if (button == 2) {
-			button = InputEvent.BUTTON3_MASK;//4
+			button = InputEvent.BUTTON3_MASK;// 4
 		}
 		switch (type) {
 		case 0:
 			//
 			this.robot.mousePress(button);
+			System.out.println("mousePress");
 			this.robot.waitForIdle();
 			break;
 		case 1:
 			//
 			this.robot.mouseRelease(button);
+			System.out.println("mouseRelease");
 			this.robot.waitForIdle();
 			break;
 		}
 	}
 
 	private void scrollEvent(int dir) {
-		this.robot.mouseWheel(-dir * this.scrollMod);//Mac scrollMod Îª¸º
+		System.out.println("mouseWheel");
+		this.robot.mouseWheel(-dir * this.scrollMod);// Mac scrollMod Îª¸º
 	}
 
 	// Raw keyboard event, no translation, intercepted when argument count is 2
@@ -238,21 +288,11 @@ public class OSCWorld extends World {
 		switch (type) {
 		case 0:
 			// key down
-			if (this.translator.isShift(keycode)) {
-				this.shifted = true;
-				this.keyPress(KeyEvent.VK_SHIFT);
-			} else {
-				this.keyPress(keycode);
-			}
+			this.keyPress(keycode);
 			break;
 		case 1:
 			// key up
-			if (this.translator.isShift(keycode)) {
-				this.shifted = false;
-				keyRelease(KeyEvent.VK_SHIFT);
-			} else {
-				this.keyRelease(keycode);
-			}
+			this.keyRelease(keycode);
 			break;
 		}
 	}
@@ -400,7 +440,6 @@ public class OSCWorld extends World {
 			System.out.println("Invalid keyRelease code: " + localcode);
 		}
 	}
-
 
 	private void addValue(StringBuilder builder, String name, float value) {
 		builder.append(name);

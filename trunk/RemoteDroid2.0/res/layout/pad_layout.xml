@@ -4,6 +4,58 @@
     android:layout_height="fill_parent" >
 
     <FrameLayout
+        android:id="@+id/flTouchPad"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="100dp"
+        android:background="@drawable/touchpad" >
+
+        <android.opengl.GLSurfaceView
+            android:id="@+id/GLView"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+    </FrameLayout>
+
+    <SlidingDrawer
+        android:id="@+id/main_slidingdrawer"
+        android:layout_width="fill_parent"
+        android:layout_height="600dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:allowSingleTap="true"
+        android:content="@+id/contentlayout"
+        android:handle="@+id/handlelayout"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:id="@id/handlelayout"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@null" >
+         </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@id/contentlayout"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="#b0000000" >
+
+            <android.inputmethodservice.KeyboardView
+                android:id="@+id/keyboard_view"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="100dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:visibility="gone" />
+        </RelativeLayout>
+    </SlidingDrawer>
+
+    <FrameLayout
         android:id="@+id/flKeyboardButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -36,47 +88,5 @@
         android:background="@drawable/left_button_off"
         android:maxHeight="100dp"
         android:minHeight="100dp" />
-
-    <FrameLayout
-        android:id="@+id/flAdvancedPanel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/advanced"
-        android:maxHeight="96dp" >
-
-        <LinearLayout
-            android:id="@+id/llAdvancedGroup"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:scrollbarAlwaysDrawHorizontalTrack="true"
-            android:scrollbarStyle="insideOverlay"
-            android:scrollbars="horizontal" />
-    </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/flTouchPad"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/flKeyboardButton"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/flAdvancedPanel"
-        android:background="@drawable/touchpad" />
-
-    <EditText
-        android:id="@+id/etAdvancedText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="-100dp"
-        android:inputType="textMultiLine"
-        android:maxHeight="32dp"
-        android:visibility="visible" />
 
 </RelativeLayout>
