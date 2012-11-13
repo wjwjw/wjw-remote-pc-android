@@ -89,7 +89,9 @@ public class ThreadDiscoverSocket extends Thread {
 	}
 	
 	//
-	
+	/**
+	 * 监听接口，在主类实现
+	 */
 	public static interface DiscoverListener {
 		void onAddressReceived(String address);
 	}

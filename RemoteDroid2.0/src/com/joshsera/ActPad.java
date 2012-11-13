@@ -1,5 +1,6 @@
 package com.joshsera;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -18,16 +19,18 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnKeyListener;
+import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 
-import com.illposed.osc.OSCMessage;
-import com.illposed.osc.OSCPort;
-import com.illposed.osc.OSCPortOut;
+import com.key.socketdata.OSCMessage;
+import com.key.socketdata.OSCPort;
+import com.key.socketdata.OSCPortOut;
 
 /**
  * 
@@ -133,8 +136,7 @@ public class ActPad extends Activity {
 
 			/**
 			 * Caches information and forces WrappedMotionEvent class to load at
-			 * Activity startup (avoid initial lag on touchpad).
-			 * 避免touchpad滞后响应
+			 * Activity startup (avoid initial lag on touchpad). 避免touchpad滞后响应
 			 */
 			this.mIsMultitouchEnabled = WrappedMotionEvent.isMutitouchCapable();
 
@@ -150,32 +152,32 @@ public class ActPad extends Activity {
 			// 更新UI用的runnables
 			this.rLeftDown = new Runnable() {
 				public void run() {
-					drawViewState(flLeftButton,ButtonOn);
+					drawViewState(flLeftButton, ButtonOn);
 				}
 			};
 			this.rLeftUp = new Runnable() {
 				public void run() {
-					drawViewState(flLeftButton,ButtonOff);
+					drawViewState(flLeftButton, ButtonOff);
 				}
 			};
 			this.rRightDown = new Runnable() {
 				public void run() {
-					drawViewState(flRightButton,ButtonOn);
+					drawViewState(flRightButton, ButtonOn);
 				}
 			};
 			this.rRightUp = new Runnable() {
 				public void run() {
-					drawViewState(flRightButton,ButtonOff);
+					drawViewState(flRightButton, ButtonOff);
 				}
 			};
 			this.rMidDown = new Runnable() {
 				public void run() {
-					drawViewState(null,SoftOn);
+					drawViewState(null, SoftOn);
 				}
 			};
 			this.rMidUp = new Runnable() {
 				public void run() {
-					drawViewState(null,SoftOff);
+					drawViewState(null, SoftOff);
 				}
 			};
 			// window manager stuff
@@ -206,6 +208,7 @@ public class ActPad extends Activity {
 
 	/**
 	 * 发送非字符按键 int传参
+	 * 
 	 * @param keycode
 	 */
 	@SuppressLint("UseValueOf")
@@ -246,6 +249,7 @@ public class ActPad extends Activity {
 
 	/**
 	 * 发送字符按键 String传参
+	 * 
 	 * @param keys
 	 */
 	@SuppressLint({ "UseValueOf", "UseValueOf", "UseValueOf" })
@@ -477,6 +481,7 @@ public class ActPad extends Activity {
 	}
 
 	String changed = "";
+
 	/**
 	 * 隐藏在上方的EditText，用来监听键盘输入
 	 */
@@ -529,12 +534,12 @@ public class ActPad extends Activity {
 
 				if (count != 0) {
 					if (change.equals(" ")) {
-						sendKey(62);//SpaceBar
+						sendKey(62);// SpaceBar
 					} else {
 						sendKeys(change);
 					}
 				} else {
-					sendKey(67);//BackSpace
+					sendKey(67);// BackSpace
 				}
 
 				changed = "a  ";
@@ -566,7 +571,6 @@ public class ActPad extends Activity {
 		});
 	}
 
-
 	/**
 	 * 初始化左键触摸板
 	 */
@@ -585,7 +589,6 @@ public class ActPad extends Activity {
 		this.flLeftButton = fl;
 	}
 
-
 	/**
 	 * 初始化右键触摸板
 	 */
@@ -603,7 +606,7 @@ public class ActPad extends Activity {
 		});
 		this.flRightButton = iv;
 	}
-	
+
 	/**
 	 * 初始化中间触摸板，用来打开和隐藏键盘
 	 */
@@ -662,6 +665,7 @@ public class ActPad extends Activity {
 	int rightClickAllowance = 1; // scroll iterations before skipping Right
 									// Click and doing scroll instead in two
 									// touch right click mode
+
 	/**
 	 * 鼠标面板触摸处理
 	 */
@@ -956,6 +960,7 @@ public class ActPad extends Activity {
 
 	/**
 	 * 发送滚轮事件
+	 * 
 	 * @param dir
 	 */
 	private void sendScrollEvent(int dir) {
@@ -1069,6 +1074,7 @@ public class ActPad extends Activity {
 
 	/**
 	 * 右键触摸处理
+	 * 
 	 * @param ev
 	 * @return
 	 */
@@ -1108,7 +1114,7 @@ public class ActPad extends Activity {
 	}
 
 	/**
-	 * 	发送右键按下
+	 * 发送右键按下
 	 */
 	private void rightButtonDown() {
 		Object[] args = new Object[1];
@@ -1141,6 +1147,7 @@ public class ActPad extends Activity {
 
 	/**
 	 * 键盘开关
+	 * 
 	 * @param ev
 	 * @return
 	 */
@@ -1179,25 +1186,24 @@ public class ActPad extends Activity {
 	private static final int ButtonOff = 2;
 	private static final int SoftOn = 3;
 	private static final int SoftOff = 4;
-	private void drawViewState(FrameLayout fl,int state){
+
+	private void drawViewState(FrameLayout fl, int state) {
 		switch (state) {
 		case ButtonOn:
-		fl.setBackgroundResource(R.drawable.left_button_on);
+			fl.setBackgroundResource(R.drawable.left_button_on);
 			break;
 		case ButtonOff:
-		fl.setBackgroundResource(R.drawable.left_button_off);
+			fl.setBackgroundResource(R.drawable.left_button_off);
 			break;
 
 		case SoftOn:
-		this.flMidButton.setBackgroundResource(R.drawable.keyboard_on);
+			this.flMidButton.setBackgroundResource(R.drawable.keyboard_on);
 			break;
 		case SoftOff:
-		this.flMidButton.setBackgroundResource(R.drawable.keyboard_off);
+			this.flMidButton.setBackgroundResource(R.drawable.keyboard_off);
 			break;
 		default:
 			break;
 		}
 	}
 }
-
-

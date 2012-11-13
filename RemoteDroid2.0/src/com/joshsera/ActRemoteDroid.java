@@ -118,6 +118,9 @@ public class ActRemoteDroid extends Activity {
 	public void onResume() {
 		super.onResume();
 		this.discover = new ThreadDiscoverSocket(
+				/**
+				 * 实现ThreadDiscoverSocket的监听接口DiscoverListener
+				 */
 				new ThreadDiscoverSocket.DiscoverListener() {
 					public void onAddressReceived(String address) {
 						hostlist.add(address);

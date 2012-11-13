@@ -20,6 +20,12 @@ import com.sun.media.sound.Toolkit;
 
 
 public class RemoteDroidServer {
+	
+	protected void finalize() throws Throwable {
+		f.setVisible(false);
+		super.finalize();
+	}
+
 	private static AppFrame f;
 	
 	public static void main(String[] args) {
