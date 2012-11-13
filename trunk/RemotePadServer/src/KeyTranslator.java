@@ -142,5 +142,4 @@ public class KeyTranslator {
 		}
 		return false;
 	}
-	
 }
