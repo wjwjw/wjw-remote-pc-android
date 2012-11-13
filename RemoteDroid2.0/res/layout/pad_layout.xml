@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <FrameLayout
+        android:id="@+id/flKeyboardButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/keyboard_off"
+        android:maxHeight="100dp"
+        android:maxWidth="60dp"
+        android:minHeight="100dp"
+        android:minWidth="60dp" />
+
+    <FrameLayout
+        android:id="@+id/flLeftButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@id/flKeyboardButton"
+        android:background="@drawable/left_button_off"
+        android:maxHeight="100dp"
+        android:minHeight="100dp" />
+
+    <FrameLayout
+        android:id="@+id/flRightButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@id/flKeyboardButton"
+        android:background="@drawable/left_button_off"
+        android:maxHeight="100dp"
+        android:minHeight="100dp" />
+
+    <FrameLayout
+        android:id="@+id/flAdvancedPanel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/advanced"
+        android:maxHeight="96dp" >
+
+        <LinearLayout
+            android:id="@+id/llAdvancedGroup"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:scrollbarAlwaysDrawHorizontalTrack="true"
+            android:scrollbarStyle="insideOverlay"
+            android:scrollbars="horizontal" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/flTouchPad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/flKeyboardButton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/flAdvancedPanel"
+        android:background="@drawable/touchpad" />
+
+    <EditText
+        android:id="@+id/etAdvancedText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="-100dp"
+        android:inputType="textMultiLine"
+        android:maxHeight="32dp"
+        android:visibility="visible" />
+
+</RelativeLayout>
