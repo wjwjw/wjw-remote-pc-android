@@ -4,9 +4,9 @@ import java.net.InetAddress;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
@@ -15,19 +15,15 @@ import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnKeyListener;
-import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 
 import com.illposed.osc.OSCMessage;
 import com.illposed.osc.OSCPort;
@@ -48,13 +44,13 @@ import com.illposed.osc.OSCPortOut;
 
 public class ActPad extends Activity {
 	//
+	private static final String TAG = "RemoteDroid";
 	private static final int TAP_NONE = 0;
 	private static final int TAP_FIRST = 1;
 	private static final int TAP_SECOND = 2;
 	private static final int TAP_DOUBLE = 3;
 	private static final int TAP_DOUBLE_FINISH = 4;
 	private static final int TAP_RIGHT = 5;
-	private static final String TAG = "RemoteDroid";
 
 	//
 	private OSCPortOut sender;
@@ -78,9 +74,6 @@ public class ActPad extends Activity {
 	//
 
 	private EditText etAdvancedText;
-	//
-	private FrameLayout flAdvancedPanel;
-	private int advancedPanelHeight = 72;
 
 	//
 	private float xHistory;
@@ -109,7 +102,6 @@ public class ActPad extends Activity {
 	private static final float sScrollMaxSettingsValue = 100f;
 
 	private float mScrollStep;// = 12f;
-	private static final float sTrackMultiplier = 6f;
 
 	/**
 	 * Cached multitouch information
@@ -120,11 +112,9 @@ public class ActPad extends Activity {
 		super();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	/**
 	 */
+	@SuppressWarnings("deprecation")
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		DataSettings.init(this.getApplicationContext());
@@ -144,6 +134,7 @@ public class ActPad extends Activity {
 			/**
 			 * Caches information and forces WrappedMotionEvent class to load at
 			 * Activity startup (avoid initial lag on touchpad).
+			 * 避免touchpad滞后响应
 			 */
 			this.mIsMultitouchEnabled = WrappedMotionEvent.isMutitouchCapable();
 
@@ -156,35 +147,35 @@ public class ActPad extends Activity {
 			Log.d(TAG, "mScrollStep=" + mScrollStep);
 			Log.d(TAG, "Settings.sensitivity=" + DataSettings.scrollSensitivity);
 			//
-			// UI runnables
+			// 更新UI用的runnables
 			this.rLeftDown = new Runnable() {
 				public void run() {
-					drawButtonOn(flLeftButton);
+					drawViewState(flLeftButton,ButtonOn);
 				}
 			};
 			this.rLeftUp = new Runnable() {
 				public void run() {
-					drawButtonOff(flLeftButton);
+					drawViewState(flLeftButton,ButtonOff);
 				}
 			};
 			this.rRightDown = new Runnable() {
 				public void run() {
-					drawButtonOn(flRightButton);
+					drawViewState(flRightButton,ButtonOn);
 				}
 			};
 			this.rRightUp = new Runnable() {
 				public void run() {
-					drawButtonOff(flRightButton);
+					drawViewState(flRightButton,ButtonOff);
 				}
 			};
 			this.rMidDown = new Runnable() {
 				public void run() {
-					drawSoftOn();
+					drawViewState(null,SoftOn);
 				}
 			};
 			this.rMidUp = new Runnable() {
 				public void run() {
-					drawSoftOff();
+					drawViewState(null,SoftOff);
 				}
 			};
 			// window manager stuff
@@ -207,90 +198,17 @@ public class ActPad extends Activity {
 			this.initLeftButton();
 			this.initRightButton();
 			this.initMidButton();
-			this.initAdvancedPanel();
 			this.initAdvancedText();
 		} catch (Exception ex) {
 			Log.d(TAG, ex.toString());
 		}
 	}
 
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-		//
-		menu.add(0, 1, 0, R.string.txt_advanced).setShortcut('0', 'c')
-				.setIcon(R.drawable.icon_advanced);
-		menu.add(0, 2, 0, R.string.txt_keyboard).setShortcut('1', 'k')
-				.setIcon(R.drawable.icon_keyboard);
-		menu.add(0, 3, 0, R.string.txt_help).setShortcut('2', 'h')
-				.setIcon(R.drawable.icon_help);
-		//
-		return true;
-	}
-
-	public boolean onOptionsItemSelected(MenuItem item) {
-		//
-		switch (item.getItemId()) {
-		case 1:
-			//
-			onAdvancedToggle();
-			break;
-		case 2:
-			//
-			midButtonDown();
-			break;
-		case 3:
-			//
-			// onPrefs();
-			break;
-		}
-		//
-		return super.onOptionsItemSelected(item);
-	}
-
-	private void onAdvancedToggle() {
-
-		if (flAdvancedPanel.getHeight() < 10) {
-			android.view.ViewGroup.LayoutParams lp = flAdvancedPanel
-					.getLayoutParams();
-			lp.height = advancedPanelHeight;
-			flAdvancedPanel.setLayoutParams(lp);
-
-			LinearLayout ll = (LinearLayout) this
-					.findViewById(R.id.llAdvancedGroup);
-
-			ll.removeAllViewsInLayout();
-
-		} else {
-			android.view.ViewGroup.LayoutParams lp = flAdvancedPanel
-					.getLayoutParams();
-			lp.height = 0;
-			flAdvancedPanel.setLayoutParams(lp);
-		}
-	}
-
-	@SuppressWarnings("unused")
-	private void onPrefs() {
-		Intent i = new Intent(ActPad.this, ActPreferences.class);
-		this.startActivity(i);
-	}
-
-	private void initAdvancedPanel() {
-		FrameLayout fl = (FrameLayout) this.findViewById(R.id.flAdvancedPanel);
-		// advancedPanelHeight = fl.getMeasuredHeight();
-		// advancedPanelHeight = fl.getHeight();
-		LayoutParams lp = fl.getLayoutParams();
-		// advancedPanelHeight = lp.height*1;
-		lp.height = 0;
-		fl.setLayoutParams(lp);
-		// listener
-		// cgu(new View.OnTouchListener() {
-		// public boolean onTouch(View v, MotionEvent ev) {
-		// return onAdvancedTouch(ev);
-		// }
-		// });
-		this.flAdvancedPanel = fl;
-	}
-
+	/**
+	 * 发送非字符按键 int传参
+	 * @param keycode
+	 */
+	@SuppressLint("UseValueOf")
 	private void sendKey(int keycode) {
 
 		Log.d("SEND_KEY",
@@ -326,6 +244,11 @@ public class ActPad extends Activity {
 
 	int find = 0;
 
+	/**
+	 * 发送字符按键 String传参
+	 * @param keys
+	 */
+	@SuppressLint({ "UseValueOf", "UseValueOf", "UseValueOf" })
 	private void sendKeys(String keys) {
 		if (keys.equals("a  "))
 			return;
@@ -554,7 +477,9 @@ public class ActPad extends Activity {
 	}
 
 	String changed = "";
-
+	/**
+	 * 隐藏在上方的EditText，用来监听键盘输入
+	 */
 	private void initAdvancedText() {
 		EditText et = (EditText) this.findViewById(R.id.etAdvancedText);
 		this.etAdvancedText = et;
@@ -563,7 +488,6 @@ public class ActPad extends Activity {
 															// keyboard doesnt
 															// go fullscreen in
 															// landscape mode
-
 		changed = "a  ";
 		etAdvancedText.setText(changed);
 
@@ -605,12 +529,12 @@ public class ActPad extends Activity {
 
 				if (count != 0) {
 					if (change.equals(" ")) {
-						sendKey(62);
+						sendKey(62);//SpaceBar
 					} else {
 						sendKeys(change);
 					}
 				} else {
-					sendKey(67);
+					sendKey(67);//BackSpace
 				}
 
 				changed = "a  ";
@@ -629,7 +553,7 @@ public class ActPad extends Activity {
 	}
 
 	/**
-	 * 初始化鼠标触摸板
+	 * 初始化鼠标触摸板 onMouseMove
 	 */
 	private void initTouchpad() {
 		FrameLayout fl = (FrameLayout) this.findViewById(R.id.flTouchPad);
@@ -641,6 +565,7 @@ public class ActPad extends Activity {
 			}
 		});
 	}
+
 
 	/**
 	 * 初始化左键触摸板
@@ -660,6 +585,10 @@ public class ActPad extends Activity {
 		this.flLeftButton = fl;
 	}
 
+
+	/**
+	 * 初始化右键触摸板
+	 */
 	private void initRightButton() {
 		FrameLayout iv = (FrameLayout) this.findViewById(R.id.flRightButton);
 		android.view.ViewGroup.LayoutParams lp = iv.getLayoutParams();
@@ -674,7 +603,10 @@ public class ActPad extends Activity {
 		});
 		this.flRightButton = iv;
 	}
-
+	
+	/**
+	 * 初始化中间触摸板，用来打开和隐藏键盘
+	 */
 	private void initMidButton() {
 		FrameLayout fl = (FrameLayout) this.findViewById(R.id.flKeyboardButton);
 		android.view.ViewGroup.LayoutParams lp = fl.getLayoutParams();
@@ -690,10 +622,12 @@ public class ActPad extends Activity {
 		this.flMidButton = fl;
 	}
 
+	@Override
 	public void onStart() {
 		super.onStart();
 	}
 
+	@Override
 	public void onResume() {
 		super.onResume();
 		// acquire screen lock
@@ -701,6 +635,7 @@ public class ActPad extends Activity {
 		this.lock.acquire();
 	}
 
+	@Override
 	public void onPause() {
 		super.onPause();
 		// this'd be a great time to disconnect from the server, and clean
@@ -710,77 +645,15 @@ public class ActPad extends Activity {
 		this.lock.release();
 	}
 
+	@Override
 	public void onStop() {
 		super.onStop();
 	}
 
+	@Override
 	public void onDestroy() {
 		super.onDestroy();
 		this.sender.close();
-	}
-
-	// keyboard
-	public boolean onKeyDown(int keycode, KeyEvent ev) {
-		// allow menu to show
-		// if (keycode == KeyEvent.KEYCODE_MENU)
-		// return super.onKeyDown(keycode, ev);
-		if (keycode == 58) { // right alt
-			this.toggleButton = true;
-			return false;
-		}
-		//
-		// Log.d(TAG, "keydown "+String.valueOf(keycode));
-		Object[] args = new Object[3];
-		args[0] = 0; /* key down */
-		args[1] = keycode;
-		args[2] = new Character(Character.toChars(DataSettings.charmap.get(
-				keycode, ev.getMetaState()))[0]).toString();
-		final OSCMessage msg = new OSCMessage("/keyboard", args);
-		new Thread() {
-			@Override
-			public void run() {
-				try {
-					ActPad.this.sender.send(msg);
-				} catch (Exception ex) {
-					Log.d(TAG, ex.toString());
-				}
-			}
-		};
-		//
-		return true;
-	}
-
-	public boolean onKeyUp(int keycode, KeyEvent ev) {
-		// allow menu to show
-		// if (keycode == KeyEvent.KEYCODE_MENU)
-		// return super.onKeyDown(keycode, ev);
-		if (keycode == KeyEvent.KEYCODE_BACK) {
-			if (!this.softShown) {
-				Intent i = new Intent(this, ActRemoteDroid.class);
-				this.startActivity(i);
-				this.finish();
-			} else {
-				this.softShown = false;
-			}
-		} else if (keycode == 58) { // right alt
-			this.toggleButton = false;
-			return false;
-		}
-		//
-		// Log.d(TAG, "keyup "+String.valueOf(keycode));
-		Object[] args = new Object[3];
-		args[0] = 1; /* key up */
-		args[1] = keycode;
-		args[2] = new Character(Character.toChars(DataSettings.charmap.get(
-				keycode, ev.getMetaState()))[0]).toString();
-		OSCMessage msg = new OSCMessage("/keyboard", args);
-		try {
-			this.sender.send(msg);
-		} catch (Exception ex) {
-			Log.d(TAG, ex.toString());
-		}
-		//
-		return true;
 	}
 
 	// mouse events
@@ -789,7 +662,9 @@ public class ActPad extends Activity {
 	int rightClickAllowance = 1; // scroll iterations before skipping Right
 									// Click and doing scroll instead in two
 									// touch right click mode
-
+	/**
+	 * 鼠标面板触摸处理
+	 */
 	private boolean onMouseMove(MotionEvent ev) {
 		int type = 0;
 		float xMove = 0f;
@@ -799,14 +674,6 @@ public class ActPad extends Activity {
 		if (mIsMultitouchEnabled) {
 			pointerCount = WrappedMotionEvent.getPointerCount(ev);
 		}
-
-		// for (int i = 0; i < pointerCount; i++) {
-		// int pointerId = ev.getPointerId(i);
-		//
-		// Log.v(TAG, "[Id=" + i + " - Index=" + i + "] X=" + ev.getX(pointerId)
-		// + " Y="
-		// + ev.getY(pointerId) + " Pressure=" + ev.getPressure(pointerId));
-		// }
 
 		switch (ev.getAction()) {
 		case MotionEvent.ACTION_DOWN:
@@ -1063,6 +930,9 @@ public class ActPad extends Activity {
 
 	// abstract mouse event
 
+	/**
+	 * 发送鼠标事件
+	 */
 	private void sendMouseEvent(int type, float x, float y) {
 		//
 		float xDir = x == 0 ? 1 : x / Math.abs(x);
@@ -1084,6 +954,10 @@ public class ActPad extends Activity {
 		}
 	}
 
+	/**
+	 * 发送滚轮事件
+	 * @param dir
+	 */
 	private void sendScrollEvent(int dir) {
 		Object[] args = new Object[1];
 		args[0] = dir;
@@ -1130,6 +1004,7 @@ public class ActPad extends Activity {
 	}
 
 	/**
+	 * 
 	 * Used to move the mouse with the second finger when one of the mouse
 	 * buttons are pressed on the UI.
 	 * 
@@ -1160,6 +1035,9 @@ public class ActPad extends Activity {
 		lastPointerCount = pointerCount;
 	}
 
+	/**
+	 * 发送左键按下
+	 */
 	private synchronized void leftButtonDown() {
 		Object[] args = new Object[1];
 		args[0] = 0;
@@ -1173,6 +1051,9 @@ public class ActPad extends Activity {
 		this.handler.post(this.rLeftDown);
 	}
 
+	/**
+	 * 发送左键弹起
+	 */
 	private synchronized void leftButtonUp() {
 		Object[] args = new Object[1];
 		args[0] = 1;
@@ -1186,6 +1067,11 @@ public class ActPad extends Activity {
 		this.handler.post(this.rLeftUp);
 	}
 
+	/**
+	 * 右键触摸处理
+	 * @param ev
+	 * @return
+	 */
 	private boolean onRightTouch(MotionEvent ev) {
 		switch (ev.getAction()) {
 		case MotionEvent.ACTION_DOWN:
@@ -1221,6 +1107,9 @@ public class ActPad extends Activity {
 		return true;
 	}
 
+	/**
+	 * 	发送右键按下
+	 */
 	private void rightButtonDown() {
 		Object[] args = new Object[1];
 		args[0] = 0;
@@ -1234,6 +1123,9 @@ public class ActPad extends Activity {
 		this.handler.post(this.rRightDown);
 	}
 
+	/**
+	 * 发送右键弹起
+	 */
 	private void rightButtonUp() {
 		Object[] args = new Object[1];
 		args[0] = 1;
@@ -1247,6 +1139,11 @@ public class ActPad extends Activity {
 		this.handler.post(this.rRightUp);
 	}
 
+	/**
+	 * 键盘开关
+	 * @param ev
+	 * @return
+	 */
 	private boolean onMidTouch(MotionEvent ev) {
 		switch (ev.getAction()) {
 		case MotionEvent.ACTION_DOWN:
@@ -1255,7 +1152,7 @@ public class ActPad extends Activity {
 			break;
 		case MotionEvent.ACTION_UP:
 			//
-			this.midButtonDown();
+			this.openKeyboard();
 			this.handler.post(this.rMidUp);
 			break;
 		}
@@ -1264,46 +1161,43 @@ public class ActPad extends Activity {
 		return true;
 	}
 
-	private void midButtonDown() {
+	/**
+	 * 打开键盘
+	 */
+	private void openKeyboard() {
 		InputMethodManager man = (InputMethodManager) this
 				.getApplicationContext().getSystemService(INPUT_METHOD_SERVICE);
-		// boolean result = man.showSoftInput(this.findViewById(R.id.ivBtnSoft),
-		// InputMethodManager.SHOW_IMPLICIT, new
-		// SoftResultReceiver(this.handler));
 		man.toggleSoftInputFromWindow(this.flMidButton.getWindowToken(),
 				InputMethodManager.SHOW_FORCED,
 				InputMethodManager.HIDE_IMPLICIT_ONLY);
-		// Log.d(TAG, "show keyboard result: "+String.valueOf(result));
-		//
-
 	}
 
-	// private void midButtonUp() {
-	// InputMethodManager man = (InputMethodManager)
-	// this.getApplicationContext()
-	// .getSystemService(INPUT_METHOD_SERVICE);
-	// //
-	// man.toggleSoftInputFromWindow(this.ivMidButton.getWindowToken(),
-	// InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
-	//
-	// }
-
-	private void drawButtonOn(FrameLayout fl) {
+	/**
+	 * 改变按钮图标
+	 */
+	private static final int ButtonOn = 1;
+	private static final int ButtonOff = 2;
+	private static final int SoftOn = 3;
+	private static final int SoftOff = 4;
+	private void drawViewState(FrameLayout fl,int state){
+		switch (state) {
+		case ButtonOn:
 		fl.setBackgroundResource(R.drawable.left_button_on);
-	}
-
-	private void drawButtonOff(FrameLayout fl) {
+			break;
+		case ButtonOff:
 		fl.setBackgroundResource(R.drawable.left_button_off);
-	}
+			break;
 
-	private void drawSoftOn() {
+		case SoftOn:
 		this.flMidButton.setBackgroundResource(R.drawable.keyboard_on);
-	}
-
-	private void drawSoftOff() {
+			break;
+		case SoftOff:
 		this.flMidButton.setBackgroundResource(R.drawable.keyboard_off);
+			break;
+		default:
+			break;
+		}
 	}
-
 }
 
 

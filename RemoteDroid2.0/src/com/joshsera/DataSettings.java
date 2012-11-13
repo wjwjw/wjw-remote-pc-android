@@ -21,7 +21,7 @@ public class DataSettings {
 	public static int scrollSensitivity;
 	public static boolean scrollInverted;
 	// public static boolean trackValue;
-    public static boolean hideMouseButtons;
+    public static boolean hideMouseButtons=true;
     public static boolean twoTouchRightClick;
     public static boolean hideAdvancedControls;
 
