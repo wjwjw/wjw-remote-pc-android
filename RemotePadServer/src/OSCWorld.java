@@ -66,8 +66,7 @@ public class OSCWorld extends World {
 			// ¼àÌýÆ÷
 			{
 				OSCListener listener = null;
-				
-				
+
 				// ¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý
 				{
 					listener = new OSCListener() {
@@ -87,7 +86,6 @@ public class OSCWorld extends World {
 				}
 				// ¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü
 
-				
 				// ¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý
 				{
 					listener = new OSCListener() {
@@ -104,7 +102,6 @@ public class OSCWorld extends World {
 				}
 				// ¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü
 
-				
 				// ¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý
 				{
 					listener = new OSCListener() {
@@ -121,7 +118,6 @@ public class OSCWorld extends World {
 				}
 				// ¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü
 
-				
 				// ¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý
 				{
 					listener = new OSCListener() {
@@ -151,7 +147,6 @@ public class OSCWorld extends World {
 				}
 				// ¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü
 
-				
 				// ¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý
 				{
 					listener = new OSCListener() {
@@ -161,12 +156,28 @@ public class OSCWorld extends World {
 							if (args.length == 2) { // handle raw keyboard
 													// event, no
 													// translations
-								if (Integer.parseInt(args[0].toString()) == 1)
+													// System.out.println((args[0].toString())
+													// + ":"
+								// + (args[1].toString()));
+								switch (Integer.parseInt(args[0].toString())) {
+								case 1:// press
 									OSCWorld.this.keyPress(Integer
 											.parseInt(args[1].toString()));
-								else
+									break;
+								case 0:// release
 									OSCWorld.this.keyRelease(Integer
 											.parseInt(args[1].toString()));
+									break;
+								case 2:// click
+									OSCWorld.this.keyPress(Integer
+											.parseInt(args[1].toString()));
+									OSCWorld.this.keyRelease(Integer
+											.parseInt(args[1].toString()));
+									break;aa
+
+								default:
+									break;
+								}
 							}
 						}
 					};
@@ -174,7 +185,6 @@ public class OSCWorld extends World {
 				}
 				// ¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü
 
-				
 				// ¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý¡ý
 				{
 					listener = new OSCListener() {
@@ -190,8 +200,7 @@ public class OSCWorld extends World {
 					this.receiver.addListener("/wheel", listener);
 				}
 				// ¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü
-				
-				
+
 				//
 				this.receiver.startListening();
 			}
@@ -276,20 +285,20 @@ public class OSCWorld extends World {
 		case 0:
 			//
 			this.robot.mousePress(button);
-			System.out.println("mousePress");
+//			System.out.println("mousePress");
 			this.robot.waitForIdle();
 			break;
 		case 1:
 			//
 			this.robot.mouseRelease(button);
-			System.out.println("mouseRelease");
+//			System.out.println("mouseRelease");
 			this.robot.waitForIdle();
 			break;
 		}
 	}
 
 	private void scrollEvent(int dir) {
-		System.out.println("mouseWheel");
+//		System.out.println("mouseWheel");
 		this.robot.mouseWheel(-dir * this.scrollMod);// Mac scrollMod Îª¸º
 	}
 

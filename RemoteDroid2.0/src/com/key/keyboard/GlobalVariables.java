@@ -35,13 +35,6 @@ public class GlobalVariables {
 	public static ConcurrentLinkedQueue<KeyboardOperating> KeycodesQueue =
 		new ConcurrentLinkedQueue<KeyboardOperating>();
 	
-	static String menutext[] = {
-			"Mouse", 
-			"Keyboard",
-			"KeyDesign", 
-			"Toothpaste",
-			"Ice Crea"
-	};
 	/**
 	 * 传送freekeyboard事件的消息队列
 	 */
@@ -61,10 +54,10 @@ public class GlobalVariables {
 		    		if(GlobalVariables.KeycodesQueue.isEmpty()) continue;
 		    		KeyboardOperating optemp = GlobalVariables.KeycodesQueue.poll(); 
 					Object[] args = new Object[2];
-					args[0] = optemp.isup; /* key up or not*/
+					args[0] = optemp.press; /* key up, down or click*/
 					args[1] = optemp.keycode;// (int)c;
 					OSCMessage msg = new OSCMessage("/freekeyboard", args);
-					Log.e("optemp.isup"+args[0],"optemp.keycode"+args[1]);
+					Log.e("optemp.press"+args[0],"optemp.keycode"+args[1]);
 					try {
 						sender.send(msg);
 					} catch (IOException e) {

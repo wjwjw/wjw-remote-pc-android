@@ -4,7 +4,6 @@ import java.net.InetAddress;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -19,7 +18,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.SlidingDrawer;
 import china.key.gl.GLRenderer;
@@ -74,9 +72,6 @@ public class ActPad extends Activity {
 	private Runnable rMidDown;
 	private Runnable rMidUp;
 	//
-
-	private EditText etAdvancedText;
-
 	//
 	private float xHistory;
 	private float yHistory;
@@ -95,7 +90,8 @@ public class ActPad extends Activity {
 	private float scrollY = 0f;
 
 	/**
-	 * Mouse sensitivity power
+	 * Mouse sensitivity power 
+	 * 灵敏度
 	 */
 	private double mMouseSensitivityPower;
 
@@ -182,9 +178,7 @@ public class ActPad extends Activity {
 				}
 			};
 			// window manager stuff
-			this.getWindow().setFlags(
-					WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN,
-					WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+//			this.getWindow().setFlags(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN,WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 		}
 		//
 		try {
@@ -201,7 +195,6 @@ public class ActPad extends Activity {
 			this.initLeftButton();
 			this.initRightButton();
 			this.initMidButton();
-//			this.initAdvancedText();
 		} catch (Exception ex) {
 			Log.d(TAG, ex.toString());
 		}
@@ -210,367 +203,11 @@ public class ActPad extends Activity {
 		GLSurfaceView glView = (GLSurfaceView) findViewById(R.id.GLView);
 		glView.setRenderer(new GLRenderer(this));
 
+		//上拉
 		mainslidingdrawer = (SlidingDrawer) findViewById(R.id.main_slidingdrawer);
 		new KeyboardUtil(ActPad.this, ActPad.this).showKeyboard();
 	}
 
-	/**
-	 * 发送非字符按键 int传参
-	 * 
-	 * @param keycode
-	 */
-	@SuppressLint("UseValueOf")
-	private void sendKey(int keycode) {
-
-		// delete spackbar
-		Log.d("SEND_KEY",
-				keycode
-						+ " '"
-						+ new Character(Character.toChars(DataSettings.charmap
-								.get(keycode, 0))[0]).toString() + "'");
-		try {
-			{
-				Object[] args = new Object[3];
-				args[0] = 0; /* key down */
-				args[1] = keycode;// (int)c;
-				args[2] = new Character(Character.toChars(DataSettings.charmap
-						.get(keycode, 0))[0]).toString();
-				OSCMessage msg = new OSCMessage("/keyboard", args);
-
-				this.sender.send(msg);
-			}
-			{
-				Object[] args = new Object[3];
-				args[0] = 1; /* key up */
-				args[1] = keycode;// (int)c;
-				args[2] = new Character(Character.toChars(DataSettings.charmap
-						.get(keycode, 0))[0]).toString();
-				OSCMessage msg = new OSCMessage("/keyboard", args);
-
-				this.sender.send(msg);
-			}
-		} catch (Exception ex) {
-			Log.d(TAG, ex.toString());
-		}
-	}
-
-	int find = 0;
-
-	/**
-	 * 发送字符按键 String传参
-	 * 
-	 * @param keys
-	 */
-	@SuppressLint({ "UseValueOf", "UseValueOf", "UseValueOf" })
-	private void sendKeys(String keys) {
-		if (keys.equals("a  "))
-			return;
-		/*
-		 * shift,ctrl,alt
-		 * 
-		 * 
-		 * "(",16,true,false,false ")",7,true,false,false
-		 * 
-		 * "{",71,true,false,false !!! "}",38,true,false,false
-		 * 
-		 * "#",18 "*",17 "\n",66 " ",62 "+",81 "-",69 "&",14,true,false,false
-		 * ",",55 ";",74 ";",74,true,false,false "/",76 "@",77 "'",75
-		 * "\"",75,true,false,false "!",8,true,false,false
-		 * "?",72,false,false,false
-		 * 
-		 * "~",126,true,false,false "_",95,true,false,false
-		 * "^",94,true,false,false "%",12,true,false,false "=",70
-		 * "$",11,true,false,false
-		 */
-
-		for (int i = 0; i < keys.length(); i++) {
-			String c = keys.substring(i, i + 1);
-
-			boolean isShift = false;
-			// boolean isCtrl = false;
-
-			if (!c.toLowerCase().equals(c)) {
-				isShift = true;
-				c = c.toLowerCase();
-			}
-
-			int key = 0;
-
-			if (c.equals(" "))
-				key = 62;
-			if (c.equals("\n"))
-				key = 66;
-			if (c.equals("\t")) {
-				key = 45;
-				// isCtrl = true;
-			}
-
-			if (c.equals("_")) {
-				key = 95;
-				isShift = true;
-			}
-			if (c.equals("\"")) {
-				key = 75;
-				isShift = true;
-			}
-			if (c.equals("^")) {
-				key = 94;
-				isShift = true;
-			}
-			if (c.equals("~")) {
-				key = 126;
-				isShift = true;
-			}
-			if (c.equals("`")) {
-				key = 68;
-				isShift = true;
-			}
-			if (c.equals(":")) {
-				key = 74;
-				isShift = true;
-			}
-			if (c.equals("="))
-				key = 70;
-			if (c.equals("+")) {
-				key = 70;
-				isShift = true;
-			}
-			if (c.equals("%")) {
-				key = 12;
-				isShift = true;
-			}
-			if (c.equals("&")) {
-				key = 14;
-				isShift = true;
-			}
-			if (c.equals("^")) {
-				key = 13;
-				isShift = true;
-			}
-			if (c.equals("|")) {
-				key = 73;
-				isShift = true;
-			}
-			if (c.equals("_")) {
-				key = 69;
-				isShift = true;
-			}
-			if (c.equals("?")) {
-				key = 76;
-				isShift = true;
-			}
-
-			if (c.equals("!")) {
-				key = 8;
-				isShift = true;
-			}
-			if (c.equals("$")) {
-				key = 11;
-				isShift = true;
-			}
-
-			if (c.equals("~")) {
-				key = 68;
-				isShift = true;
-			}
-
-			if (c.equals("<")) {
-				key = 55;
-				isShift = true;
-			}
-			if (c.equals(",")) {
-				key = 55;
-				// isCtrl = true;
-			}
-			if (c.equals(">")) {
-				key = 56;
-				isShift = true;
-			}
-
-			if (c.equals(".")) {
-				key = 56;
-				// isCtrl = true;
-			}
-
-			if (c.equals("(")) {
-				key = 16;
-				isShift = true;
-			}
-			if (c.equals(")")) {
-				key = 7;
-				isShift = true;
-			}
-
-			if (c.equals("{")) {
-				key = 71;
-				isShift = true;
-			}
-			if (c.equals("}")) {
-				key = 72;
-				isShift = true;
-			}
-			if (c.equals("["))
-				key = 71;
-			if (c.equals("]"))
-				key = 72;
-
-			if (key == 0)
-				for (int z = 0; z < 1024; z++) {
-					if (DataSettings.charmap.isPrintingKey(z)) {
-						if (new Character(
-								Character.toChars(DataSettings.charmap
-										.get(z, 0))[0]).toString().equals(c)) {
-							key = z;
-							break;
-						}
-					}
-				}
-
-			try {
-				// if (isCtrl) {
-				// Object[] args = new Object[3];
-				// args[0] = 0; /* key down */
-				// args[1] = 60;// (int)c;
-				// args[2] = new Character((char) 0).toString();
-				// OSCMessage msg = new OSCMessage("/keyboard", args);
-				//
-				// this.sender.send(msg);
-				// }
-
-				if (isShift) {
-					Object[] args = new Object[3];
-					args[0] = 0; /* key down */
-					args[1] = 59;// (int)c;
-					args[2] = new Character((char) 0).toString();
-					OSCMessage msg = new OSCMessage("/keyboard", args);
-
-					this.sender.send(msg);
-				}
-
-				{
-					Object[] args = new Object[3];
-					args[0] = 0; /* key down */
-					args[1] = key;// (int)c;
-					args[2] = c;
-					OSCMessage msg = new OSCMessage("/keyboard", args);
-
-					this.sender.send(msg);
-
-				}
-				{
-					Object[] args = new Object[3];
-					args[0] = 1; /* key up */
-					args[1] = key;// (int)c;
-					args[2] = c;
-					OSCMessage msg = new OSCMessage("/keyboard", args);
-
-					this.sender.send(msg);
-
-				}
-				if (isShift) {
-					Object[] args = new Object[3];
-					args[0] = 1; /* key up */
-					args[1] = 59;// (int)c;
-					args[2] = new Character((char) 0).toString();
-					OSCMessage msg = new OSCMessage("/keyboard", args);
-
-					this.sender.send(msg);
-				}
-
-				// if (isCtrl) {
-				// Object[] args = new Object[3];
-				// args[0] = 1; /* key up */
-				// args[1] = 60;// (int)c;
-				// args[2] = new Character((char) 0).toString();
-				// OSCMessage msg = new OSCMessage("/keyboard", args);
-				//
-				// this.sender.send(msg);
-				// }
-			} catch (Exception ex) {
-				Log.d(TAG, ex.toString());
-			}
-		}
-
-	}
-
-	String changed = "";
-
-	/**
-	 * 隐藏在上方的EditText，用来监听键盘输入
-	 */
-//	private void initAdvancedText() {
-//		EditText et = (EditText) this.findViewById(R.id.etAdvancedText);
-//		this.etAdvancedText = et;
-//
-//		et.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);// make sure
-//															// keyboard doesnt
-//															// go fullscreen in
-//															// landscape mode
-//		changed = "a  ";
-//		etAdvancedText.setText(changed);
-//
-//		// listener
-//		/**
-//		 * 键盘的功能键
-//		 */
-//		et.setOnKeyListener(new OnKeyListener() {
-//
-//			@Override
-//			public boolean onKey(View v, int keyCode, KeyEvent event) {
-//				Log.d("KEY_CHANGED", "'" + event.getCharacters() + "' "
-//						+ keyCode);
-//				changed = "a  ";
-//				etAdvancedText.setText(changed);
-//				return false;
-//			}
-//		});
-//		/**
-//		 * 字符
-//		 */
-//		et.addTextChangedListener(new TextWatcher() {
-//			public void onTextChanged(CharSequence s, int start, int before,
-//					int count) {
-//				if (s.toString().equals(changed)) {
-//
-//					etAdvancedText.requestFocus();
-//					etAdvancedText.setSelection(2);
-//					return;
-//				}
-//				changed = null;
-//
-//				// onAdvancedTextChanged(s, start, count);
-//				Log.d("TEXT_CHANGED",
-//						"'" + s.toString().substring(start, start + count)
-//								+ "' " + start + "|" + count);
-//				String change = s.toString().substring(start, start + count);
-//
-//				if (count != 0) {
-//					if (change.equals(" ")) {
-//						sendKey(62);// SpaceBar
-//					} else {
-//						sendKeys(change);
-//					}
-//				} else {
-//					sendKey(67);// BackSpace
-//				}
-//
-//				changed = "a  ";
-//				etAdvancedText.setText(changed);
-//			}
-//
-//			@Override
-//			public void beforeTextChanged(CharSequence s, int start, int count,
-//					int after) {
-//
-//			}
-//
-//			@Override
-//			public void afterTextChanged(Editable s) {
-//
-//			}
-//		});
-//	}
-//
 	/**
 	 * 初始化鼠标触摸板 onMouseMove
 	 */
@@ -644,16 +281,14 @@ public class ActPad extends Activity {
 					mainslidingdrawer.open();
 				}
 				return true;
-				// return onMidTouch(ev);
 			}
 		});
 		this.flMidButton = fl;
 	}
 
 	public boolean onKeyUp(int keycode, KeyEvent ev) {
-		// allow menu to show
-		// if (keycode == KeyEvent.KEYCODE_MENU)
-		// return super.onKeyDown(keycode, ev);
+
+		//key back 
 		if (keycode == KeyEvent.KEYCODE_BACK) {
 			if (!this.softShown) {
 				Intent i = new Intent(this, KeyDesignActivity.class);
@@ -674,7 +309,6 @@ public class ActPad extends Activity {
 	@Override
 	public void onResume() {
 		super.onResume();
-		// acquire screen lock
 		// 锁定屏幕常亮
 		this.lock.acquire();
 	}
@@ -682,9 +316,6 @@ public class ActPad extends Activity {
 	@Override
 	public void onPause() {
 		super.onPause();
-		// this'd be a great time to disconnect from the server, and clean
-		// up anything that needs to be cleaned up.
-		// release screen lock
 		// 解锁屏幕常亮
 		this.lock.release();
 	}
@@ -724,13 +355,6 @@ public class ActPad extends Activity {
 		case MotionEvent.ACTION_DOWN:
 			// glview
 			GlobalVariables.glviewtouchdown = true;
-
-			changed = "a  ";
-//			etAdvancedText.setText(changed);// reset text, so special keyboards
-//											// wont try to insert a " " before
-//											// next word (a bit of a hack,
-//											// should be in a method, maybe
-//											// cancelKeyboard()
 
 			// scrollX = 0;
 			scrollY = 0;
@@ -1198,40 +822,7 @@ public class ActPad extends Activity {
 		this.handler.post(this.rRightUp);
 	}
 
-	/**
-	 * 键盘开关
-	 * 
-	 * @param ev
-	 * @return
-	 */
-//	private boolean onMidTouch(MotionEvent ev) {
-//		switch (ev.getAction()) {
-//		case MotionEvent.ACTION_DOWN:
-//			//
-//			this.handler.post(this.rMidDown);
-//			break;
-//		case MotionEvent.ACTION_UP:
-//			//
-//			this.openKeyboard();
-//			this.handler.post(this.rMidUp);
-//			break;
-//		}
-//		this.softShown = true;
-//		//
-//		return true;
-//	}
-//
-	/**
-	 * 打开键盘
-	 */
-//	private void openKeyboard() {
-//		InputMethodManager man = (InputMethodManager) this
-//				.getApplicationContext().getSystemService(INPUT_METHOD_SERVICE);
-//		man.toggleSoftInputFromWindow(this.flMidButton.getWindowToken(),
-//				InputMethodManager.SHOW_FORCED,
-//				InputMethodManager.HIDE_IMPLICIT_ONLY);
-//	}
-//
+
 	/**
 	 * 改变按钮图标
 	 */
