@@ -89,7 +89,7 @@ public class KeyboardActivity extends Activity {
 
 			switch (eventAction) {
 			case MotionEvent.ACTION_DOWN:
-				keyOP_temp.setIsup(0);
+				keyOP_temp.setPress(0);
 				keyOP_temp.setKeycode(GlobalVariables.buttondatas.get(buttonid)
 						.getKeycodes());
 				if (keyOP_temp.getKeycode() == -1000)
@@ -97,7 +97,7 @@ public class KeyboardActivity extends Activity {
 				GlobalVariables.KeycodesQueue.add(keyOP_temp);
 				break;
 			case MotionEvent.ACTION_UP:
-				keyOP_temp.setIsup(1);
+				keyOP_temp.setPress(1);
 				keyOP_temp.setKeycode(GlobalVariables.buttondatas.get(buttonid)
 						.getKeycodes());
 				if (keyOP_temp.getKeycode() == -1000)

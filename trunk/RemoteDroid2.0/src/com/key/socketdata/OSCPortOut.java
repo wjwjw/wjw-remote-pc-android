@@ -10,26 +10,27 @@ import java.net.UnknownHostException;
 import android.util.Log;
 
 /**
- * OSCPortOut is the class that sends OSC messages to a specific address and port.
- * OSCPortOut是一个用来把OSC messages 发送到特殊的地址和端口的类
- * 呼叫 send()发送
- * To send an OSC message, call send().
+ * OSCPortOut is the class that sends OSC messages to a specific address and
+ * port. OSCPortOut是一个用来把OSC messages 发送到特殊的地址和端口的类 呼叫 send()发送 To send an OSC
+ * message, call send().
  * <p>
- * An example based on com.illposed.osc.test.OSCPortTest::testMessageWithArgs() :
+ * An example based on com.illposed.osc.test.OSCPortTest::testMessageWithArgs()
+ * :
+ * 
  * <pre>
-	OSCPort sender = new OSCPort();
-	Object args[] = new Object[2];
-	args[0] = new Integer(3);
-	args[1] = "hello";
-	OSCMessage msg = new OSCMessage("/sayhello", args);
-	 try {
-		sender.send(msg);
-	 } catch (Exception e) {
-		 showError("Couldn't send");
-	 }
+ * OSCPort sender = new OSCPort();
+ * Object args[] = new Object[2];
+ * args[0] = new Integer(3);
+ * args[1] = &quot;hello&quot;;
+ * OSCMessage msg = new OSCMessage(&quot;/sayhello&quot;, args);
+ * try {
+ * 	sender.send(msg);
+ * } catch (Exception e) {
+ * 	showError(&quot;Couldn't send&quot;);
+ * }
  * </pre>
- *
- * @author 
+ * 
+ * @author
  * @version 1.0
  */
 public class OSCPortOut extends OSCPort {
@@ -38,47 +39,55 @@ public class OSCPortOut extends OSCPort {
 
 	/**
 	 * Create an OSCPort that sends to newAddress, newPort
-	 * @param newAddress InetAddress
-	 * @param newPort int
+	 * 
+	 * @param newAddress
+	 *            InetAddress
+	 * @param newPort
+	 *            int
 	 */
 	public OSCPortOut(InetAddress newAddress, int newPort)
-		throws SocketException {
+			throws SocketException {
 		socket = new DatagramSocket();
 		address = newAddress;
 		port = newPort;
 	}
 
 	/**
-	 * Create an OSCPort that sends to newAddress, on the standard SuperCollider port
-	 * @param newAddress InetAddress
-	 *
-	 * Default the port to the standard one for SuperCollider
+	 * Create an OSCPort that sends to newAddress, on the standard SuperCollider
+	 * port
+	 * 
+	 * @param newAddress
+	 *            InetAddress
+	 * 
+	 *            Default the port to the standard one for SuperCollider
 	 */
 	public OSCPortOut(InetAddress newAddress) throws SocketException {
 		this(newAddress, defaultSCOSCPort());
 	}
 
 	/**
-	 * Create an OSCPort that sends to localhost, on the standard SuperCollider port
-	 * Default the address to localhost
-	 * Default the port to the standard one for SuperCollider
+	 * Create an OSCPort that sends to localhost, on the standard SuperCollider
+	 * port Default the address to localhost Default the port to the standard
+	 * one for SuperCollider
 	 */
 	public OSCPortOut() throws UnknownHostException, SocketException {
 		this(InetAddress.getLocalHost(), defaultSCOSCPort());
 	}
-	
+
 	/**
 	 * Send an osc packet (message or bundle) to the receiver I am bound to.
-	 * @param aPacket OSCPacket
+	 * 
+	 * @param aPacket
+	 *            OSCPacket
 	 */
 	public void send(OSCPacket aPacket) throws IOException {
-		
+
 		byte[] byteArray = aPacket.getByteArray();
-		final DatagramPacket packet =
-			new DatagramPacket(byteArray, byteArray.length, address, port);
-		new Thread(){
+		final DatagramPacket packet = new DatagramPacket(byteArray,
+				byteArray.length, address, port);
+		new Thread() {
 			@Override
-			public void run(){
+			public void run() {
 				try {
 					socket.send(packet);
 				} catch (IOException e) {
@@ -86,6 +95,6 @@ public class OSCPortOut extends OSCPort {
 					e.printStackTrace();
 				}
 			}
-			}.start();
+		}.start();
 	}
 }

@@ -8,7 +8,7 @@
     <!-- ansi -->
 
     <Row>
-        <Key android:codes="192" android:keyLabel="`" />
+        <Key android:codes="-16" android:keyLabel="Esc" />
         
         <Key android:codes="49" android:keyLabel="1" />
         <Key android:codes="50" android:keyLabel="2" />
@@ -90,7 +90,7 @@
 
     <Row>
 
-        <Key android:codes="-12" android:keyLabel="Shift" android:isModifier="true" android:isSticky="true" android:keyWidth="16.666667%p" />
+        <Key android:codes="-12" android:keyLabel="Shift"  android:isSticky="true" android:keyWidth="16.666667%p" />
         
         
         <Key android:codes="90" android:keyLabel="z" />
@@ -126,21 +126,18 @@
 
         <Key 
             android:codes="-13" 
-            android:isModifier="true"
             android:isSticky="true"
             android:keyLabel="Ctrl" 
             android:keyWidth="10.000002%p"/>
         
         <Key
             android:codes="-14"
-            android:isModifier="true"
             android:isSticky="true"
             android:keyLabel="Win"
             android:keyWidth="10.000002%p"/>
 
         <Key
             android:codes="-15"
-            android:isModifier="true"
             android:isSticky="true"
             android:keyLabel="Alt"
             android:keyWidth="10.000002%p" />

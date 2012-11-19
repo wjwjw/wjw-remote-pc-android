@@ -1,25 +1,25 @@
 package com.key.keyboard;
 
 public class KeyboardOperating {
-	int isup;
+	int press;
 	int keycode;
-	KeyboardOperating(int _isup,int _keycode){
-		this.isup = _isup;
+	KeyboardOperating(int _press,int _keycode){
+		this.press = _press;
 		this.keycode = _keycode;
 	}
 	KeyboardOperating(){
 		this.keycode = -1000;
 	}
-	public int getIsup() {
-		return isup;
+	public int getPress() {
+		return press;
 	}
-	public void setIsup(int isup) {
-		this.isup = isup;
+	public void setPress(int _press) {
+		this.press = _press;
 	}
 	public int getKeycode() {
 		return keycode;
 	}
-	public void setKeycode(int keycode) {
-		this.keycode = keycode;
+	public void setKeycode(int _keycode) {
+		this.keycode = _keycode;
 	}
 }

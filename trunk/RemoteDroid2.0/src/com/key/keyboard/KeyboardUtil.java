@@ -2,18 +2,14 @@ package com.key.keyboard;
 
 import java.util.List;
 
-import android.R.string;
 import android.app.Activity;
 import android.content.Context;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.Keyboard.Key;
 import android.inputmethodservice.KeyboardView;
 import android.inputmethodservice.KeyboardView.OnKeyboardActionListener;
-import android.text.Editable;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.EditText;
 
 import com.key.R;
 
@@ -27,13 +23,12 @@ public class KeyboardUtil {
 	public boolean isnun = false;// 是否数据键盘
 	public boolean isupper = false;// 是否大写
 	
-	public String lowersymbol = "`1234567890-=\\[];',./abcdefghijklmnopqrstuvwxyz";
-	public String uppersymbol = "~!@#$%^&*()_+|{}:\"<>?ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	public String lowersymbol = "1234567890-=\\[];',./abcdefghijklmnopqrstuvwxyz";
+	public String uppersymbol = "!@#$%^&*()_+|{}:\"<>?ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 	//TODO 改键值啊~亲
 	public int KeyCodesSymbol[] = {
-			// ~
-			192,
+
 			// 1 - 0
 			49, 50, 51, 52, 53, 54, 55, 56, 57, 48,
 			// -=\\[];',./
@@ -44,10 +39,10 @@ public class KeyboardUtil {
 
 
 
-	private static boolean isShiftUp = false;
-	private static boolean isCtrlUp = false;
-	private static boolean isWinUp = false;
-	private static boolean isAltUp = false;
+	private static boolean isShiftDown = false;
+	private static boolean isCtrlDown = false;
+	private static boolean isWinDown = false;
+	private static boolean isAltDown = false;
 
 	public KeyboardUtil(Activity act, Context ctx) {
 		this.act = act;
@@ -92,73 +87,58 @@ public class KeyboardUtil {
 
 		@Override
 		public void onKey(int primaryCode, int[] keyCodes) {
-			// Log.e("onKey",""+primaryCode);
-			// Editable editable = ed.getText();
-			// int start = ed.getSelectionStart();
-			// if (primaryCode == Keyboard.KEYCODE_CANCEL) {// 完成
-			// hideKeyboard();
-			// }
-			// else if (primaryCode == Keyboard.KEYCODE_DELETE) {// 回退
-			// if (editable != null && editable.length() > 0) {
-			// if (start > 0) {
-			// editable.delete(start - 1, start);
-			// }
-			// }
-			// }
-			// else
-			if (primaryCode == -12) {
-				changeKey();
-				keyboardView.setKeyboard(k1);
-			}
+			Log.d("TAG","onKey"+primaryCode);
+
 			if (primaryCode == Keyboard.KEYCODE_MODE_CHANGE) {// 数字键盘切换
-				if (isnun) {
+				if (isnun) { 
 					isnun = false;
 					keyboardView.setKeyboard(k1);
 				} else {
 					isnun = true;
 					keyboardView.setKeyboard(k2);
 				}
-			} else {
-				if (primaryCode > 0) {
-					pushKeyboard(primaryCode, 0);
-					pushKeyboard(primaryCode, 1);
-				} else if (primaryCode > -12) {
-					pushspecialkey(primaryCode, 0);
-					pushspecialkey(primaryCode, 1);
-				} else if (primaryCode == -12) { // shift sticky
-					if (isShiftUp) {
-						pushspecialkey(primaryCode, 0);
-						isShiftUp = !isShiftUp;
-					} else {
-						pushspecialkey(primaryCode, 1);
-						isShiftUp = !isShiftUp;
-					}
-				} else if (primaryCode == -13) { // ctrl sticky
-					if (isCtrlUp) {
-						pushspecialkey(primaryCode, 0);
-						isCtrlUp = !isCtrlUp;
-					} else {
-						pushspecialkey(primaryCode, 1);
-						isCtrlUp = !isCtrlUp;
-					}
-				} else if (primaryCode == -13) { // ctrl sticky
-					if (isWinUp) {
-						pushspecialkey(primaryCode, 0);
-						isWinUp = !isWinUp;
-					} else {
-						pushspecialkey(primaryCode, 1);
-						isWinUp = !isWinUp;
-					}
-				} else if (primaryCode == -13) { // ctrl sticky
-					if (isAltUp) {
-						pushspecialkey(primaryCode, 0);
-						isAltUp = !isAltUp;
-					} else {
-						pushspecialkey(primaryCode, 1);
-						isAltUp = !isAltUp;
-					}
-				}
+				return;
 			}
+
+			if (primaryCode == -12) {// shift
+				changeKey();
+				keyboardView.setKeyboard(k1);
+			}
+
+			if (primaryCode > 0) {// not sticky & not specil
+				pushKeyboard(primaryCode, 2);// Click
+			} else if (primaryCode==-16 || primaryCode > -12) {// esc || specil
+				pushspecialkey(primaryCode, 2);// click
+			}  else if (primaryCode == -12) { // shift sticky
+				if (isShiftDown) {
+					pushspecialkey(primaryCode, 0);// Release
+				} else {
+					pushspecialkey(primaryCode, 1);// press
+				}
+				isShiftDown = !isShiftDown;
+			} else if (primaryCode == -13) { // ctrl sticky
+				if (isCtrlDown) {
+					pushspecialkey(primaryCode, 0);// Release
+				} else {
+					pushspecialkey(primaryCode, 1);// press
+				}
+				isCtrlDown = !isCtrlDown;
+			} else if (primaryCode == -14) { // win sticky
+				if (isWinDown) {
+					pushspecialkey(primaryCode, 0);// Release
+				} else {
+					pushspecialkey(primaryCode, 1);// press
+				}
+				isWinDown = !isWinDown;
+			} else if (primaryCode == -15) { // Alt sticky
+				if (isAltDown) {
+					pushspecialkey(primaryCode, 0);// Release
+				} else {
+					pushspecialkey(primaryCode, 1);// press
+				}
+				isAltDown = !isAltDown;
+			}
+
 		}
 	};
 	/**
@@ -228,13 +208,13 @@ public class KeyboardUtil {
 	/**
 	 * 把freekayboard事件push进消息队列中 Keycodes>0
 	 * 
-	 * @param Ispress
+	 * @param press
 	 * @param Keycodes
 	 */
-	private void pushKeyboard(int Keycodes, int Isup) {
+	private void pushKeyboard(int Keycodes, int press) {
 
 		KeyboardOperating keyOP_temp = new KeyboardOperating();
-		keyOP_temp.setIsup(Isup);
+		keyOP_temp.setPress(press);
 		keyOP_temp.setKeycode(Keycodes);
 		if (keyOP_temp.getKeycode() == -1000)
 			return;
@@ -244,9 +224,11 @@ public class KeyboardUtil {
 	/**
 	 * Keycodes<0
 	 * 
-	 * @param keyPress:1 
-	 * @param keyRelease:0
+	 * @param press		1<br>
+	 * @param release	0<br>
+	 * @param click		2<br>
 	 * 
+	 * <br>
 	 * Specil Key Codes <br>
 	 * -1 shift <br>
 	 * -2 123# <br>
@@ -263,9 +245,9 @@ public class KeyboardUtil {
 	 * -13 Ctrl Sticky <br>
 	 * -14 Win Sticky <br>
 	 * -15 Alt Sticky<br>
-	 * 
+	 * -16 Esc<br>
 	 */
-	private void pushspecialkey(int Keycodes, int Isup) {
+	private void pushspecialkey(int Keycodes, int press) {
 
 		switch (Keycodes) {
 		case -1://shift
@@ -281,7 +263,7 @@ public class KeyboardUtil {
 			Keycodes = 10;
 			break;
 		case -5://backspace
-			Keycodes = 32;
+			Keycodes = 8;
 			break;
 		case -6://Alt
 			Keycodes = 18;
@@ -313,12 +295,15 @@ public class KeyboardUtil {
 		case -15://Alt Sticky
 			Keycodes = 18;
 			break;
+		case -16://Esc
+			Keycodes = 27;
+			break;
 		default:
 			Keycodes = -1000;
 			break;
 		}
 		KeyboardOperating keyOP_temp = new KeyboardOperating();
-		keyOP_temp.setIsup(Isup);
+		keyOP_temp.setPress(press);
 		keyOP_temp.setKeycode(Keycodes);
 		if (keyOP_temp.getKeycode() == -1000)
 			return;

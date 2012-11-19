@@ -54,7 +54,7 @@ public class ActRemoteDroid extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE); // added to save screen
+//		requestWindowFeature(Window.FEATURE_NO_TITLE); // added to save screen
 														// space, the Title was
 														// shown twice, in
 														// Standard Android bar,
@@ -145,7 +145,6 @@ public class ActRemoteDroid extends Activity {
 	}
 
 	// menu
-
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		//
@@ -157,8 +156,9 @@ public class ActRemoteDroid extends Activity {
 		return true;
 	}
 
+	
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		//
 		switch (item.getItemId()) {
 		case MENU_PREFS:
 			//
@@ -169,11 +169,8 @@ public class ActRemoteDroid extends Activity {
 			this.onHelp();
 			break;
 		}
-		//
 		return super.onOptionsItemSelected(item);
 	}
-
-	//
 
 	private void onConnectButton() {
 		String ip = this.tbIp.getText().toString();
