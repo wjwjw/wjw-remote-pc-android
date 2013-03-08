@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="txt_ip_address">开始使用:\n1. 在您的电脑上启动控制软件的桌面应用程序.\n2. 输入您的IP地址或者在下面的列表中选择</string>
+    <string name="txt_ip_error">暂无找到设备</string>
+    <string name="txt_connect">连接</string>
+    <string name="app_name">AndroidRemotePc</string>
+    <string name="txt_help">帮助</string>
+    <string name="txt_help_dialog_0">支持开源的理念，该项目以Android系统为基础，通过WIFI实现无线键鼠，项目源码地址：</string>
+    <string name="txt_close">关闭</string>
+    <string name="txt_server_url">https://code.google.com/p/wjw-remote-pc-android/</string>
+    <string name="txt_help_dialog_1">请确保您的电脑与移动设备处于同一个网段，打开电脑端软件，打开Android端软件时会显示主机列表，找到您的电脑IP进行连接控制</string>
+    <string name="txt_preferences">首选项</string>
+    <string name="txt_keyboard">Keyboard</string>
+    <string name="txt_advanced">Controls</string>
+    <string name="txt_save">保存</string>
+    <string name="txt_prefs_copy">菜单项有所需要的设置和帮助.</string>
+    <string name="txt_recentlyUsedHosts">主机列表:</string>
+    <string name="toast_invalidIP">非法的IP地址!</string>
+
+</resources>
