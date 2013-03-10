@@ -20,7 +20,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.SlidingDrawer;
-import china.key.gl.GLRenderer;
+import china.key.gl.GLRender;
 
 import com.key.keyboard.GlobalVariables;
 import com.key.keyboard.KeyDesignActivity;
@@ -201,7 +201,7 @@ public class ActPad extends Activity {
 
 		// glview
 		GLSurfaceView glView = (GLSurfaceView) findViewById(R.id.GLView);
-		glView.setRenderer(new GLRenderer(this));
+		glView.setRenderer(new GLRender(this));
 
 		//иою╜
 		mainslidingdrawer = (SlidingDrawer) findViewById(R.id.main_slidingdrawer);
