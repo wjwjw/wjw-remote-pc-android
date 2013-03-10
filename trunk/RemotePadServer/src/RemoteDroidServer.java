@@ -33,7 +33,7 @@ public class RemoteDroidServer {
 		f = new AppFrame();
 		f.setVisible(true);
 		f.setResizable(false);
-		f.setTitle("RemoteDroid Server");
+		f.setTitle("·þÎñÆ÷¶Ë");
 		
 		f.addWindowListener(new WindowAdapter() {
 	    	public void windowClosing(WindowEvent e) {
