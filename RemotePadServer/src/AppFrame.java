@@ -19,7 +19,7 @@ public class AppFrame extends Frame {
 	public static InetAddress localAddr;
 	
 	//
-	private String[] textLines = new String[6];
+	private String[] textLines = new String[5];
 	//
 	private Image imLogo;
 	private Image imHelp;
@@ -28,12 +28,18 @@ public class AppFrame extends Frame {
 	//
 	private Timer timer;
 	//
-	private int height = 510;
-	private int width = 540;
+	private int height = 500;
+	private int width = 500;
 	//
 	private OSCWorld world;
 	//
-	private String appName = "RemoteDroid Server R2"; //added R2 so that version 2 of client will not confuse users as R2 is not needed for all features, and a future Client v3.0 might still use R2/v2.0 of the server
+	/**
+	 * added R2 so that version 2 of client will not confuse 
+	 * users as R2 is not needed for all features, and a 
+	 * future Client v3.0 might still use R2/v2.0 of the 
+	 * server
+	 */
+	private String appName = "Android无线控制Pc"; 
 	//
 	private Toolkit toolkit;
 	private MediaTracker tracker;
@@ -42,12 +48,13 @@ public class AppFrame extends Frame {
 		super();
 		GlobalData.oFrame = this;
 		this.setSize(this.width, this.height);
+		this.setLocation(100,100);
 		//
 		this.toolkit = Toolkit.getDefaultToolkit();
 		this.tracker = new MediaTracker(this);
 		//
 		//this.init();
-		// get local IP
+		// 获取本地IP地址
 		String sHost = "";
 		try {
 			localAddr = InetAddress.getLocalHost();
@@ -56,15 +63,14 @@ public class AppFrame extends Frame {
 			}
 			sHost = localAddr.getHostAddress();
 		} catch (UnknownHostException ex) {
-			sHost = "Error finding local IP.";
+			sHost = "无法查看本机IP";
 		}
 		//
-		this.textLines[0] = "The RemoteDroid server application is now running.";
+		this.textLines[0] = "Android控制Pc的服务端正在运行";
 		this.textLines[1] = "";
-		this.textLines[2] = "Your IP address is: "+sHost;
+		this.textLines[2] = "检测到您本机的IP地址为: "+sHost;
 		this.textLines[3] = "";
-		this.textLines[4] = "Enter this IP address on the start screen of the";
-		this.textLines[5] = "RemoteDroid application on your phone to begin.";
+		this.textLines[4] = "在你移动设备上的控制端软件的第一个界面输入此IP地址来控制本机";
 		//
 		try {
 			URL fileURL = this.getClass().getProtectionDomain().getCodeSource().getLocation();
@@ -76,7 +82,7 @@ public class AppFrame extends Frame {
 				basePath = System.getProperty("user.dir") + "\\res\\";
 			}
 		} catch (Exception ex) {
-			this.textLines[1] = "exception: "+ex.toString();
+			this.textLines[1] = "异常输出: "+ex.toString();//测试使用
 			
 		}
 		
@@ -123,8 +129,8 @@ public class AppFrame extends Frame {
 		} catch (InterruptedException ie) {
 		}
 		//
-		this.fontTitle = new Font("Verdana", Font.BOLD, 16);
-		this.fontText = new Font("Verdana", Font.PLAIN, 11);
+		this.fontTitle = new Font("宋体", Font.BOLD, 18);
+		this.fontText = new Font("宋体", Font.ITALIC, 15);
 		this.setBackground(Color.BLACK);
 		this.setForeground(Color.WHITE);
 		//
@@ -152,7 +158,7 @@ public class AppFrame extends Frame {
 		//
 		g.setFont(this.fontText);
 		int startY = 90;
-		int l = 6;
+		int l = 5;
 		for (int i = 0;i<l;++i) {
 			g.drawString(this.textLines[i], 10, startY);
 			startY += 13;

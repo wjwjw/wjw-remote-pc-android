@@ -69,6 +69,7 @@ public class OSCWorld extends World {
 
 				// ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 				{
+					//鼠标移动信号处理
 					listener = new OSCListener() {
 						public void acceptMessage(java.util.Date time,
 								OSCMessage message) {
@@ -88,6 +89,7 @@ public class OSCWorld extends World {
 
 				// ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 				{
+					// 鼠标左键信号处理
 					listener = new OSCListener() {
 						public void acceptMessage(java.util.Date time,
 								OSCMessage message) {
@@ -104,6 +106,7 @@ public class OSCWorld extends World {
 
 				// ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 				{
+					//鼠标右键信号处理
 					listener = new OSCListener() {
 						public void acceptMessage(java.util.Date time,
 								OSCMessage message) {
@@ -120,6 +123,7 @@ public class OSCWorld extends World {
 
 				// ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 				{
+					//标准键盘信号处理
 					listener = new OSCListener() {
 						public void acceptMessage(java.util.Date time,
 								OSCMessage message) {
@@ -149,6 +153,7 @@ public class OSCWorld extends World {
 
 				// ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 				{
+					//自定义布局键盘信号处理
 					listener = new OSCListener() {
 						public void acceptMessage(java.util.Date time,
 								OSCMessage message) {
@@ -173,7 +178,7 @@ public class OSCWorld extends World {
 											.parseInt(args[1].toString()));
 									OSCWorld.this.keyRelease(Integer
 											.parseInt(args[1].toString()));
-									break;aa
+									break;
 
 								default:
 									break;
@@ -187,6 +192,7 @@ public class OSCWorld extends World {
 
 				// ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 				{
+					//滚轮信号处理
 					listener = new OSCListener() {
 						public void acceptMessage(java.util.Date time,
 								OSCMessage message) {
