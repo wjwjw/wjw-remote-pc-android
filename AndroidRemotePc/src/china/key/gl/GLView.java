@@ -13,7 +13,7 @@ import android.content.Context;
 import android.opengl.GLSurfaceView;
 
 class GLView extends GLSurfaceView {
-   private final GLRenderer renderer;
+   private final GLRender renderer;
 
    GLView(Context context) {
       super(context);
@@ -21,7 +21,7 @@ class GLView extends GLSurfaceView {
       // Uncomment this to turn on error-checking and logging
       //setDebugFlags(DEBUG_CHECK_GL_ERROR | DEBUG_LOG_GL_CALLS);
 
-      renderer = new GLRenderer(context);
+      renderer = new GLRender(context);
       setRenderer(renderer);
    }
 }
