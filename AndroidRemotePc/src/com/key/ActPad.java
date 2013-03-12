@@ -20,8 +20,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.SlidingDrawer;
-import china.key.gl.GLRender;
 
+import com.key.gl.GLRender;
 import com.key.keyboard.GlobalVariables;
 import com.key.keyboard.KeyDesignActivity;
 import com.key.keyboard.KeyboardUtil;

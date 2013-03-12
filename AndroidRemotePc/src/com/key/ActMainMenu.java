@@ -10,13 +10,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.key.handwrite.ActHandwrite;
 import com.key.keyboard.KeyDesignActivity;
 import com.key.keyboard.KeyboardActivity;
 
 public class ActMainMenu extends ListActivity {
 
 	static final String[] MenuItemNames = new String[] { "标准鼠标键盘模式","自由键盘模式",
-		"设置自由键盘布局", "首选项" };
+		"设置自由键盘布局", "首选项","手写输入Beta" };
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -40,8 +41,9 @@ public class ActMainMenu extends ListActivity {
 //						((TextView) view).getText(), Toast.LENGTH_SHORT).show();
 				
 				String str_select_name = (String) ((TextView) view).getText();
-
-				for (int i = 0; i < 4; i++) {
+				int Menu_Item_Num = MenuItemNames.length;
+				
+				for (int i = 0; i < Menu_Item_Num; i++) {
 					if (str_select_name == MenuItemNames[i]) {
 						switch (i) {
 						case 0: {//标准鼠标键盘模式
@@ -65,6 +67,12 @@ public class ActMainMenu extends ListActivity {
 							startActivity(_intent);
 						}
 						break;
+						case 4:{//手写输入Beta
+							Intent _intent = new Intent(ActMainMenu.this, ActHandwrite.class);
+							startActivity(_intent);
+						}
+						break;
+						
 						default:
 							break;
 						}

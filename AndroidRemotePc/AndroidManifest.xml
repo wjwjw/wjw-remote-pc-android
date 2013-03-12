@@ -28,10 +28,13 @@
             android:name=".ActPreferences"
             android:screenOrientation="portrait" >
         </activity>
-        <activity 
+        <activity
             android:name=".ActMainMenu"
             android:screenOrientation="portrait" >
-            >
+        </activity>
+        <activity
+            android:name="com.key.handwrite.ActHandwrite"
+            android:screenOrientation="portrait" >
         </activity>
         <activity android:name="com.key.keyboard.KeyboardActivity" >
         </activity>
