@@ -14,10 +14,21 @@ import com.key.handwrite.ActHandwrite;
 import com.key.keyboard.KeyDesignActivity;
 import com.key.keyboard.KeyboardActivity;
 
+/**
+ * 主要功能展示，各个功能的入口
+ * 1)标准鼠标键盘模式
+ * 2)自由键盘模式
+ * 3)设置自由键盘布局
+ * 4)设置首选项
+ * 5)手写输入Beta
+ * 
+ * @author key
+ *
+ */
 public class ActMainMenu extends ListActivity {
 
 	static final String[] MenuItemNames = new String[] { "标准鼠标键盘模式","自由键盘模式",
-		"设置自由键盘布局", "首选项","手写输入Beta" };
+		"设置自由键盘布局", "设置首选项","手写输入Beta" };
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

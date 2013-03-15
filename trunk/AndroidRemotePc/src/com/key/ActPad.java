@@ -31,7 +31,7 @@ import com.key.socketdata.OSCPortOut;
 
 /**
  * 
- * @author jsera
+ * 主要控制面板的界面
  * 
  *         <pre>
  *         TODO:
@@ -44,7 +44,7 @@ import com.key.socketdata.OSCPortOut;
 
 public class ActPad extends Activity {
 	//
-	private static final String TAG = "RemoteDroid";
+	private static final String TAG = "ActPad";
 	private static final int TAP_NONE = 0;
 	private static final int TAP_FIRST = 1;
 	private static final int TAP_SECOND = 2;

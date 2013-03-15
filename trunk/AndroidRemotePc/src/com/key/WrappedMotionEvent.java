@@ -14,7 +14,6 @@ import android.view.MotionEvent;
  * invoking them by Reflection. This allows creating a SDK 3 version which will
  * accept multi-touch input if used on a compatible device.
  * 
- * @author Nicolas Frenay
  * 
  */
 public class WrappedMotionEvent {

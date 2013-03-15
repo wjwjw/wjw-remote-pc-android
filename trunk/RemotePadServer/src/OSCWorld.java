@@ -1,6 +1,5 @@
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
-import java.awt.Label;
 import java.awt.MouseInfo;
 import java.awt.PointerInfo;
 import java.awt.Rectangle;
@@ -8,13 +7,12 @@ import java.awt.Robot;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
-import jsera.util.World;
-import sun.rmi.runtime.Log;
 
-import com.illposed.osc.OSCListener;
-import com.illposed.osc.OSCMessage;
-import com.illposed.osc.OSCPort;
-import com.illposed.osc.OSCPortIn;
+import com.key.interfaces.World;
+import com.key.osc.socketbase.OSCListener;
+import com.key.osc.socketbase.OSCMessage;
+import com.key.osc.socketbase.OSCPort;
+import com.key.osc.socketbase.OSCPortIn;
 
 /**
  * 
@@ -40,7 +38,7 @@ public class OSCWorld extends World {
 	private GraphicsDevice[] gDevices;
 	private Rectangle[] gBounds;
 	//
-	private Label lbDebug;
+//	private Label lbDebug;
 	//
 	private int scrollMod = -1;
 	//
@@ -128,7 +126,6 @@ public class OSCWorld extends World {
 						public void acceptMessage(java.util.Date time,
 								OSCMessage message) {
 							Object[] args = message.getArguments();
-							// TODO
 							if (args.length == 3) {
 								keyboardEvent(
 										Integer.parseInt(args[0].toString()),
@@ -207,7 +204,28 @@ public class OSCWorld extends World {
 				}
 				// ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
-				//
+				// ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+				{
+					//直接文字发送
+					listener = new OSCListener() {
+						public void acceptMessage(java.util.Date time,
+								OSCMessage message) {
+							Object[] args = message.getArguments();
+							if (args.length == 1) {
+								
+								int i_for_Unicode = Integer.parseInt(args[0].toString());
+								char c = (char)i_for_Unicode;
+								GlobalData.oFrame.drawWord(String.valueOf(c));//界面画出文字
+							}
+						}
+					};
+					this.receiver.addListener("/string", listener);
+				}
+				// ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+				/*
+				 * 开始所有监听
+				 */
 				this.receiver.startListening();
 			}
 			//
@@ -466,12 +484,12 @@ public class OSCWorld extends World {
 		}
 	}
 
-	private void addValue(StringBuilder builder, String name, float value) {
-		builder.append(name);
-		builder.append(": ");
-		builder.append(value);
-		builder.append("\n");
-	}
+//	private void addValue(StringBuilder builder, String name, float value) {
+//		builder.append(name);
+//		builder.append(": ");
+//		builder.append(value);
+//		builder.append("\n");
+//	}
 
 	//
 

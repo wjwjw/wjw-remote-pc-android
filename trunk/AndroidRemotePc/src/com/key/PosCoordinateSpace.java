@@ -4,7 +4,6 @@ package com.key;
  * 3点指明一个空间向量
  * Stores 3 vectors representing a coordinate space.
  * 
- * @author jsera
  *
  */
 

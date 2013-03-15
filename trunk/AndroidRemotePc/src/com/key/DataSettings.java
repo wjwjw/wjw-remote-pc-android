@@ -8,7 +8,6 @@ import android.view.KeyCharacterMap;
 /**
  * 全局的设置参数
  * 
- * @author 
  * 
  */
 public class DataSettings {
