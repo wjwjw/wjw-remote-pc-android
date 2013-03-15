@@ -8,10 +8,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
-
-import com.sun.media.sound.Toolkit;
 
 /**
  * to-do:
@@ -54,7 +51,7 @@ public class RemoteDroidServer {
 		//
 		System.out.println(System.getProperty("os.name"));
 		
-		final TrayIcon trayIcon;
+//		final TrayIcon trayIcon;
 
 		if (SystemTray.isSupported()) {
 			

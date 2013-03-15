@@ -7,6 +7,13 @@ import android.os.Bundle;
 import android.widget.CheckBox;
 import android.widget.SeekBar;
 
+/**
+ * 设置首选项界面
+ * 
+ * @author key
+ *
+ */
+
 public class ActPreferences extends Activity {
 	//
 	private CheckBox cbTap;

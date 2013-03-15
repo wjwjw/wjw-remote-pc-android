@@ -12,7 +12,6 @@ import com.key.R;
  * HostµÄÊÊÅäÆ÷
  * ListAdapter
  * 
- * @author jsera
  *
  */
 

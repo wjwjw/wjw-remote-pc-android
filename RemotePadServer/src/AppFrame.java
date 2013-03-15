@@ -1,10 +1,22 @@
-import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
-import java.net.*;
-import java.util.jar.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Frame;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.MediaTracker;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.URL;
+import java.net.UnknownHostException;
+import java.util.jar.JarFile;
 
-import javax.swing.*;
+import javax.swing.Timer;
 
 
 public class AppFrame extends Frame {
@@ -30,25 +42,27 @@ public class AppFrame extends Frame {
 	//
 	private int height = 500;
 	private int width = 500;
+	private int screenWidth = 800;
+	private int screenHeight = 600;
 	//
 	private OSCWorld world;
-	//
-	/**
-	 * added R2 so that version 2 of client will not confuse 
-	 * users as R2 is not needed for all features, and a 
-	 * future Client v3.0 might still use R2/v2.0 of the 
-	 * server
-	 */
+
 	private String appName = "Android无线控制Pc"; 
 	//
 	private Toolkit toolkit;
 	private MediaTracker tracker;
+	//
+	private String write_text;
 	
 	public AppFrame() {
 		super();
+		write_text = "";
 		GlobalData.oFrame = this;
+		//
 		this.setSize(this.width, this.height);
-		this.setLocation(100,100);
+		screenWidth = ((int)java.awt.Toolkit.getDefaultToolkit().getScreenSize().width);
+		screenHeight = ((int)java.awt.Toolkit.getDefaultToolkit().getScreenSize().height);
+		this.setLocation((screenWidth-this.width)>>1, (screenHeight-this.height)>>1);//窗口居中
 		//
 		this.toolkit = Toolkit.getDefaultToolkit();
 		this.tracker = new MediaTracker(this);
@@ -70,7 +84,7 @@ public class AppFrame extends Frame {
 		this.textLines[1] = "";
 		this.textLines[2] = "检测到您本机的IP地址为: "+sHost;
 		this.textLines[3] = "";
-		this.textLines[4] = "在你移动设备上的控制端软件的第一个界面输入此IP地址来控制本机";
+		this.textLines[4] = "在你移动设备上的控制端软件输入此IP地址来控制本机";
 		//
 		try {
 			URL fileURL = this.getClass().getProtectionDomain().getCodeSource().getLocation();
@@ -144,28 +158,41 @@ public class AppFrame extends Frame {
 			}
 		});
 		this.timer.start();
-		
+				
 	}
 	
 	public void paint(Graphics g) {
-		g.setColor(this.getBackground());
-		g.fillRect(0, 0, this.width, this.height);
-		g.setColor(this.getForeground());
-		//
-		g.drawImage(this.imLogo, 10, 30, this);
-		g.setFont(this.fontTitle);
-		g.drawString(this.appName, 70, 55);
-		//
-		g.setFont(this.fontText);
-		int startY = 90;
-		int l = 5;
-		for (int i = 0;i<l;++i) {
-			g.drawString(this.textLines[i], 10, startY);
-			startY += 13;
+		if (write_text == "") {
+			g.setColor(this.getBackground());
+			g.fillRect(0, 0, this.width, this.height);
+			g.setColor(this.getForeground());
+			//
+			g.drawImage(this.imLogo, 10, 30, this);
+			g.setFont(this.fontTitle);
+			g.drawString(this.appName, 70, 55);
+			//
+			g.setFont(this.fontText);
+			int startY = 90;
+			int l = 5;
+			for (int i = 0; i < l; ++i) {
+				g.drawString(this.textLines[i], 10, startY);
+				startY += 13;
+			}
+			//
+			g.drawImage(this.imHelp, 20, startY + 10, this);
+		} else {
+			g.setColor(this.getBackground());
+			g.fillRect(0, 0, this.width, this.height);
+			g.setColor(this.getForeground());
+			this.fontText = new Font("宋体", Font.BOLD, 100);
+			g.setFont(this.fontText);
+			g.drawString(this.write_text, (this.width>>1)-50, (this.height>>1));
 		}
-		//
-		g.drawImage(this.imHelp, 20, startY+10, this);
 	}
-	/*
-	*/
+	
+	public void drawWord(String str){
+		write_text = str;
+		repaint();		
+	}
+
 }
